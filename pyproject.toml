@@ -1,0 +1,21 @@
+[project]
+name = "ragator-v2"
+version = "0.1.0"
+description = ""
+authors = [{ name = "Gabriel Guerin", email = "gabriel.guerin@theodo.com" }]
+requires-python = "==3.11.*"
+dependencies = [
+    "chainlit>=2.4.400",
+    "langchain>=0.3.23",
+    "langgraph>=0.3.27",
+    "pydantic>=2.11.3",
+]
+
+[tool.pdm.build]
+includes = []
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.coverage.run]
+branch = true
