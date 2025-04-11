@@ -1,7 +1,7 @@
-state_type:
-    id: _base_state_graph
-    module_path: state_graphs._base_state_graph
-    class_name: BaseStateGraph
+state:
+    id: simple_state
+    module_path: workflow.states.simple_state
+    class_name: SimpleState
 
 entry_point: get_user_metadata
 
@@ -12,10 +12,6 @@ nodes:
 
   - id: reformulate_question
     module_path: nodes.reformulate_question
-    function_name: main
-
-  - id: classify_question
-    module_path: nodes.classify_question
     function_name: main
 
   - id: generate_static_answer
@@ -39,12 +35,9 @@ edges:
     to_node: reformulate_question
 
   - from_node: reformulate_question
-    to_node: classify_question
-
-  - from_node: classify_question
     condition:
         id: classify_question
-        module_path: nodes.classify_question
+        module_path: routers.classify_question
         function_name: main
     mapping:
       OFF_TOPIC: generate_static_answer

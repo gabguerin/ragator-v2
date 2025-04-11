@@ -1,0 +1,14 @@
+prompt:
+  fra: |
+    "Vous êtes un expert des rapports financiers des entreprises du SBF120. 
+    Reformulez la question suivante afin qu'elle soit adaptée à une recherche précise dans les rapports financiers :
+
+    Question initiale :
+    {question}
+
+    Nouvelle question améliorée :"
+prompt_inputs:
+  - question
+instructions: |
+  "Améliorez la question pour cibler les informations présentes dans les rapports financiers. Soyez précis et concis."
+format_json: false
