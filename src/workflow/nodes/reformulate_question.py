@@ -1,4 +1,3 @@
-
 def main(**kwargs):
     question = kwargs.get("question", "")
     # Dummy reformulation

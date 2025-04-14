@@ -3,7 +3,7 @@ from langgraph.constants import END
 from langgraph.graph import StateGraph
 from langgraph.graph.state import CompiledStateGraph
 
-from utils.importlib import import_module_from_path
+from utils import import_module_from_path
 from workflow.models.schema_model import Schema
 
 
@@ -30,7 +30,9 @@ def load_rag_workflow_from_schema(yaml_path: str) -> "CompiledStateGraph":
     # Add edges
     for edge in workflow_schema.edges:
         if "condition" in edge.model_fields:
-            edge_function = import_module_from_path(edge.condition.module_path, edge.condition.function_name)
+            edge_function = import_module_from_path(
+                edge.condition.module_path, edge.condition.function_name
+            )
             mapping = {
                 from_condition: (END if to_node == "__end__" else to_node)
                 for from_condition, to_node in edge.mapping.items()

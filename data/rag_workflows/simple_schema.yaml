@@ -7,37 +7,45 @@ entry_point: get_user_metadata
 
 nodes:
   - id: get_user_metadata
-    module_path: nodes.get_user_metadata
+    module_path: src.workflow.nodes.get_user_metadata
     function_name: main
 
   - id: reformulate_question
-    module_path: nodes.reformulate_question
+    module_path: src.workflow.nodes.reformulate_question
+    function_name: main
+
+  - id: classify_question
+    module_path: src.workflow.nodes.classify_question
     function_name: main
 
   - id: generate_static_answer
-    module_path: nodes.get_static_answer
+    module_path: src.workflow.nodes.get_static_answer
     function_name: main
 
   - id: retrieve_documents
-    module_path: nodes.retrieve_documents
+    module_path: src.workflow.nodes.retrieve_documents
     function_name: main
 
   - id: rerank_documents
-    module_path: nodes.rerank_documents
+    module_path: src.workflow.nodes.rerank_documents
     function_name: main
 
   - id: generate_llm_answer
-    module_path: nodes.generate_llm_answer
+    module_path: src.workflow.nodes.generate_llm_answer
     function_name: main
+    llm_instruction_yaml_path: data.llm_instructions.answer_generation_instruction
 
 edges:
   - from_node: get_user_metadata
     to_node: reformulate_question
 
   - from_node: reformulate_question
+    to_node: classify_question
+
+  - from_node: classify_question
     condition:
-        id: classify_question
-        module_path: routers.classify_question
+        id: question_classification
+        module_path: src.workflow.routers.question_classification
         function_name: main
     mapping:
       OFF_TOPIC: generate_static_answer

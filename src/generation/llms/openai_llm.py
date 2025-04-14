@@ -1,14 +1,17 @@
 import json
+import os
 from typing import List
 
-import yaml
+import openai
 from dotenv import load_dotenv
-from langchain_ollama import ChatOllama
-from langchain_openai import ChatOpenAI
 
+from generation.llms.base_llm import BaseLLM
 
 # Load env variables
 load_dotenv()
+
+# Set your OpenAI API key
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
 class OpenAILLM(BaseLLM):
@@ -24,50 +27,33 @@ class OpenAILLM(BaseLLM):
         self.prompt_inputs = prompt_inputs
         self.instructions = instructions or ""
         self.format_json = format_json
-
-        self.chat_model = ChatOpenAI(
-            model="gpt-3.5-turbo",
-            temperature=0,
-        )
-        if self.format_json:
-            self.chat_model = self.chat_model.bind(
-                response_format={"type": "json_object"}
-            )
+        self.model = "gpt-3.5-turbo"
 
     def invoke(self, inputs: dict[str, str]) -> str:
-        if len(set(self.prompt_inputs) - set(list(inputs.keys()))) > 0:
+        missing_keys = set(self.prompt_inputs) - set(inputs.keys())
+        if missing_keys:
             raise ValueError(f"Input dict should contain {self.prompt_inputs} keys")
+
         formatted_prompt = self.prompt.format(**inputs)
 
-        result = self.chat_model.invoke(
-            input=[
-                (
-                    "system",
-                    self.instructions,
-                ),
-                (
-                    "user",
-                    formatted_prompt,
-                ),
-            ],
-        ).content
+        messages = [
+            {"role": "system", "content": self.instructions},
+            {"role": "user", "content": formatted_prompt},
+        ]
+
+        kwargs = {
+            "model": self.model,
+            "messages": messages,
+            "temperature": 0,
+        }
+
+        if self.format_json:
+            kwargs["response_format"] = "json"
+
+        response = openai.ChatCompletion.create(**kwargs)
+
+        result = response.choices[0].message.content
 
         if self.format_json:
             return json.loads(result)
         return result
-
-
-# Load model configs
-with open("backend/chat_models/system_instructions.yml", "r", encoding="utf-8") as f:
-    model_configs = yaml.safe_load(f)
-
-# Instantiate chat models from config
-rag_model = LLM(**model_configs["retrieval_augmented_generator"])
-summarizer = LLM(**model_configs["multi_modal_summarizer"])
-
-rewriter = LLM(**model_configs["question_rewriter"])
-
-retrieval_grader = LLM(**model_configs["retrieval_grader"])
-hallucination_grader = LLM(**model_configs["hallucination_grader"])
-answer_grader = LLM(**model_configs["answer_grader"])
-router = LLM(**model_configs["router"])
