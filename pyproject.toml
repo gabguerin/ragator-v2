@@ -5,7 +5,9 @@ description = ""
 authors = [{ name = "Gabriel Guerin", email = "gabriel.guerin@theodo.com" }]
 requires-python = "==3.11.*"
 dependencies = [
+    "bs4>=0.0.2",
     "chainlit>=2.4.400",
+    "gitpython>=3.1.44",
     "langchain>=0.3.23",
     "langfuse>=2.60.2",
     "langgraph>=0.3.27",
@@ -13,6 +15,7 @@ dependencies = [
     "pandas>=2.2.3",
     "pydantic>=2.11.3",
     "qdrant-client>=1.13.3",
+    "requests-html>=0.10.0",
 ]
 
 [tool.pdm.build]

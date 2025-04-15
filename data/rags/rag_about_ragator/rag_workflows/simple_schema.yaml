@@ -3,9 +3,13 @@ state:
     module_path: workflow.states.simple_state
     class_name: SimpleState
 
-entry_point: classify_question
+entry_point: get_user_metadata
 
 nodes:
+  - id: get_user_metadata
+    module_path: src.workflow.nodes.get_user_metadata
+    function_name: main
+
   - id: classify_question
     module_path: src.workflow.nodes.classify_question
     function_name: main
@@ -21,9 +25,11 @@ nodes:
   - id: generate_llm_answer
     module_path: src.workflow.nodes.generate_llm_answer
     function_name: main
-    llm_instruction_yaml_path: data.llm_instructions.answer_generation_instruction
 
 edges:
+  - from_node: get_user_metadata
+    to_node: classify_question
+
   - from_node: classify_question
     condition:
         id: question_classification
