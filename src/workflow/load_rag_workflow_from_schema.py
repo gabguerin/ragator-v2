@@ -3,7 +3,7 @@ from langgraph.constants import END
 from langgraph.graph import StateGraph
 from langgraph.graph.state import CompiledStateGraph
 
-from utils import import_module_from_path
+from utils.importlib import import_module_from_path
 from workflow.models.schema_model import Schema
 
 
@@ -17,7 +17,7 @@ def load_rag_workflow_from_schema(yaml_path: str) -> "CompiledStateGraph":
         module_path=workflow_schema.state.module_path,
         object_name=workflow_schema.state.class_name,
     )
-    workflow = StateGraph(state_class)
+    workflow = StateGraph(type(state_class))
 
     # Add nodes
     for node in workflow_schema.nodes:
