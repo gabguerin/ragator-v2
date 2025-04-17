@@ -1,3 +1,4 @@
+import asyncio
 from pathlib import Path
 from typing import Annotated
 
@@ -8,12 +9,12 @@ import yaml
 from retrieval.files.html_file import HtmlFile
 
 
-def main(
-    downloaded_html_pages_folder: Annotated[Path, typer.Option(...)],
-    chunks_parquet_path: Annotated[str, typer.Option(...)],
+async def _main(
+    downloaded_html_pages_folder: Path,
+    chunks_parquet_path: str,
 ) -> None:
     with open("scripts/populate_qdrant_collection/params.yaml") as f:
-        params = yaml.safe_load(f)["train"]
+        params = yaml.safe_load(f)
 
     all_chunks = []
     for path in downloaded_html_pages_folder.glob("*.html"):
@@ -31,6 +32,15 @@ def main(
 
     df = pd.DataFrame(all_chunks)
     df.to_parquet(chunks_parquet_path, index=False)
+
+
+def main(
+    downloaded_html_pages_folder: Annotated[Path, typer.Option(...)],
+    chunks_parquet_path: Annotated[str, typer.Option(...)],
+) -> None:
+    asyncio.run(
+        _main(downloaded_html_pages_folder, chunks_parquet_path),
+    )
 
 
 if __name__ == "__main__":

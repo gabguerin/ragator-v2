@@ -1,0 +1,56 @@
+schema: '2.0'
+stages:
+  get_all_urls_to_download:
+    cmd: PYTHONPATH=. python scripts/populate_qdrant_collection/stages/get_all_urls_to_download.py
+      --all-urls-to-download-file-path data/rag_about_ragator/html_urls_to_download.txt
+    deps:
+    - path: scripts/populate_qdrant_collection/stages/get_all_urls_to_download.py
+      hash: md5
+      md5: 15179047903769c1554669f282e32cac
+      size: 886
+    params:
+      scripts/populate_qdrant_collection/params.yaml:
+        max_pages_per_sources: 100
+        sources:
+        - https://langchain-ai.github.io/langgraph/
+        - https://python-client.qdrant.tech/
+    outs:
+    - path: data/rag_about_ragator/html_urls_to_download.txt
+      hash: md5
+      md5: 64d44c56675384ee5d5ba2398f82efb0
+      size: 12871
+  download_html_pages:
+    cmd: PYTHONPATH=. python scripts/populate_qdrant_collection/stages/download_html_pages.py
+      --all-urls-to-download-file-path data/rag_about_ragator/html_urls_to_download.txt
+      --downloaded-html-pages-folder data/rag_about_ragator/downloaded_html_pages
+    deps:
+    - path: scripts/populate_qdrant_collection/stages/download_html_pages.py
+      hash: md5
+      md5: 15389ebd47edffe8d2a8b76e3b945467
+      size: 893
+    outs:
+    - path: data/rag_about_ragator/downloaded_html_pages
+      hash: md5
+      md5: 97b4fc45239cc0c093e3368986f0ea14.dir
+      size: 29339050
+      nfiles: 176
+  get_chunks_from_html_pages:
+    cmd: PYTHONPATH=. python scripts/populate_qdrant_collection/stages/get_chunks_from_html_pages.py
+      --downloaded-html-pages-folder data/rag_about_ragator/downloaded_html_pages
+      --chunks-parquet-path data/rag_about_ragator/chunks.parquet.gzip
+    deps:
+    - path: scripts/populate_qdrant_collection/stages/get_chunks_from_html_pages.py
+      hash: md5
+      md5: aa1c9c81b610a4c5eccac86380e94c2d
+      size: 1220
+    params:
+      scripts/populate_qdrant_collection/params.yaml:
+        embedding_model.chunk_overlap: 50
+        embedding_model.chunk_size: 500
+        embedding_model.name: text-embedding-3-large
+        embedding_model.type: openai
+    outs:
+    - path: data/rag_about_ragator/chunks.parquet.gzip
+      hash: md5
+      md5: 7c70c4bb4164be191ed74f1e019b6557
+      size: 600
