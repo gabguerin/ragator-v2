@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from typing import List
 from abc import ABC, abstractmethod
 
@@ -7,7 +8,9 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 
 class BaseFile(ABC):
-    def __init__(self, filepath: str, chunk_size: int = 500, chunk_overlap: int = 50):
+    def __init__(
+        self, filepath: str | Path, chunk_size: int = 500, chunk_overlap: int = 50
+    ):
         self.filepath = filepath
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap

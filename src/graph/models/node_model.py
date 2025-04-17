@@ -15,6 +15,7 @@ class Node(BaseModel):
         module_path (str): The path to the module that defines the node.
         function_name (str): The name of the function associated with the node.
     """
+
     id: str
     module_path: str
     function_name: str

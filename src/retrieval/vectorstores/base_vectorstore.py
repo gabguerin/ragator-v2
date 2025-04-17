@@ -19,7 +19,9 @@ class BaseVectorStore(ABC):
         """Initialize AsyncQdrantVectorStore."""
         self.collection_name = collection_name
         self.embedding_model = embedding_model
-        self.client = self.initialize_client(local_path=local_path, url=url, api_key=api_key)
+        self.client = self.initialize_client(
+            local_path=local_path, url=url, api_key=api_key
+        )
 
     @abstractmethod
     def initialize_client(

@@ -1,4 +1,3 @@
-
 def main(**kwargs):
     return {
         "user_metadata": {

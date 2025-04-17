@@ -1,0 +1,44 @@
+vars:
+  - stages_folder_path: scripts/populate_qdrant_collection/stages
+  - data_folder_path: data/rag_about_ragator
+
+stages:
+  get_all_urls_to_download:
+    wdir: ../..
+    cmd:
+      PYTHONPATH=. python ${stages_folder_path}/get_all_urls_to_download.py
+     --all-urls-to-download-file-path ${data_folder_path}/html_urls_to_download.txt
+    deps:
+      - ${stages_folder_path}/get_all_urls_to_download.py
+    params:
+      - sources
+      - max_pages_per_sources
+    outs:
+      - ${data_folder_path}/html_urls_to_download.txt
+
+  download_html_pages:
+    wdir: ../..
+    cmd:
+      PYTHONPATH=. python ${stages_folder_path}/download_html_pages.py
+     --all-urls-to-download-file-path ${data_folder_path}/html_urls_to_download.txt
+     --downloaded-html-pages-folder ${data_folder_path}/downloaded_html_pages
+    deps:
+      - ${stages_folder_path}/download_html_pages.py
+    outs:
+      - ${data_folder_path}/downloaded_html_pages
+
+  get_chunks_from_html_pages:
+    wdir: ../..
+    cmd:
+      PYTHONPATH=. python ${stages_folder_path}/get_chunks_from_html_pages.py
+     --downloaded-html-pages-folder ${data_folder_path}/downloaded_html_pages
+     --chunks-parquet-path ${data_folder_path}/chunks.parquet.gzip
+    deps:
+      - ${stages_folder_path}/get_chunks_from_html_pages.py
+    params:
+      - embedding_model.name
+      - embedding_model.type
+      - embedding_model.chunk_size
+      - embedding_model.chunk_overlap
+    outs:
+      - ${data_folder_path}/chunks.parquet.gzip

@@ -1,8 +1,9 @@
+import uuid
 from typing import List
 
 from langchain_core.documents import Document
 from qdrant_client import AsyncQdrantClient
-from langchain.vectorstores.qdrant import Qdrant
+from qdrant_client.grpc import PointStruct
 
 from retrieval.vectorstores.base_vectorstore import BaseVectorStore
 
@@ -27,18 +28,27 @@ class QdrantVectorStore(BaseVectorStore):
         )
 
     async def add_documents(self, documents: List[Document]):
-        qdrant = await Qdrant.afrom_documents(
-            documents=documents,
-            embedding=self.embedding_model,
-            collection_name=self.collection_name,
-            client=self.client,
-        )
-        return qdrant
+        """Add documents to the Qdrant collection."""
+        vectors = [self.embedding_model(doc.page_content) for doc in documents]
+        payloads = [doc.metadata for doc in documents]
+        points = [
+            PointStruct(id=str(uuid.uuid4()), vector=vec, payload=payload)
+            for vec, payload in zip(vectors, payloads)
+        ]
+
+        await self.client.upsert(collection_name=self.collection_name, points=points)
 
     async def similarity_search(self, query: str, k: int = 5) -> List[Document]:
-        qdrant = Qdrant(
-            client=self.client,
-            collection_name=self.collection_name,
-            embeddings=self.embedding_model,
+        """Return documents most similar to the query."""
+        query_vector = self.embedding_function(query)
+
+        search_result = await self.client.search(
+            collection_name=self.collection_name, query_vector=query_vector, limit=k
         )
-        return await qdrant.asimilarity_search(query, k=k)
+
+        results = [
+            Document(page_content=hit.payload.get("text", ""), metadata=hit.payload)
+            for hit in search_result
+        ]
+
+        return results

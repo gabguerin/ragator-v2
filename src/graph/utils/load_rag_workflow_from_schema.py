@@ -1,13 +1,14 @@
+from pathlib import Path
+
 import yaml
 from langgraph.constants import END
-from langgraph.graph import StateGraph
-from langgraph.graph.state import CompiledStateGraph
+from langgraph.graph.state import CompiledStateGraph, StateGraph
 
 from utils.importlib import import_module_from_path
-from workflow.models.schema_model import Schema
+from src.graph.models.schema_model import Schema
 
 
-def load_rag_workflow_from_schema(yaml_path: str) -> "CompiledStateGraph":
+def load_rag_workflow_from_schema(yaml_path: Path) -> "CompiledStateGraph":
     with open(yaml_path, "r") as f:
         config = yaml.safe_load(f)
 

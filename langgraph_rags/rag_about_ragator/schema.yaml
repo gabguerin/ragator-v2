@@ -1,29 +1,29 @@
 state:
-    id: simple_state
-    module_path: workflow.states.simple_state
-    class_name: SimpleState
+    id: state
+    module_path: langgraph_rags.rag_about_ragator.rag_state
+    class_name: RagState
 
 entry_point: get_user_metadata
 
 nodes:
   - id: get_user_metadata
-    module_path: src.workflow.nodes.get_user_metadata
+    module_path: langgraph_rags.rag_about_ragator.nodes.get_user_metadata
     function_name: main
 
   - id: classify_question
-    module_path: src.workflow.nodes.classify_question
+    module_path: langgraph_rags.rag_about_ragator.nodes.classify_question
     function_name: main
 
   - id: generate_static_answer
-    module_path: src.workflow.nodes.get_static_answer
+    module_path: langgraph_rags.rag_about_ragator.nodes.get_static_answer
     function_name: main
 
   - id: retrieve_documents
-    module_path: src.workflow.nodes.retrieve_documents
+    module_path: langgraph_rags.rag_about_ragator.nodes.retrieve_documents
     function_name: main
 
   - id: generate_llm_answer
-    module_path: src.workflow.nodes.generate_llm_answer
+    module_path: langgraph_rags.rag_about_ragator.nodes.generate_llm_answer
     function_name: main
 
 edges:
@@ -33,7 +33,7 @@ edges:
   - from_node: classify_question
     condition:
         id: question_classification
-        module_path: src.workflow.routers.question_classification
+        module_path: langgraph_rags.rag_about_ragator.routers.question_classification
         function_name: main
     mapping:
       OFF_TOPIC: generate_static_answer

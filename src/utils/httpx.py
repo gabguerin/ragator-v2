@@ -9,7 +9,9 @@ import os
 
 
 def convert_url_to_filename(url):
-    return url.replace("https://", "").replace("http://", "").replace("/", "_") + ".html"
+    return (
+        url.replace("https://", "").replace("http://", "").replace("/", "_") + ".html"
+    )
 
 
 async def download_web_page(url: str, folder: Path) -> str | None:

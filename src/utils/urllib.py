@@ -39,14 +39,18 @@ async def crawl_website(start_url: str, max_pages: int = 100) -> List[str]:
     async with aiohttp.ClientSession() as session:
         while to_visit and len(discovered) < max_pages:
             tasks = []
-            current_batch = list(to_visit)[:max_pages - len(discovered)]
+            current_batch = list(to_visit)[: max_pages - len(discovered)]
             to_visit.clear()
 
             for url in current_batch:
                 if urlparse(url).netloc == base_url.netloc:
                     if url not in visited:
                         visited.add(url)
-                        tasks.append(fetch_with_parse(url, session, to_visit, base_url.netloc, semaphore))
+                        tasks.append(
+                            fetch_with_parse(
+                                url, session, to_visit, base_url.netloc, semaphore
+                            )
+                        )
 
             _ = await asyncio.gather(*tasks)
             for url in current_batch:

@@ -1,9 +1,9 @@
 from typing import List
 from pydantic import BaseModel
 
-from workflow.models.edge_model import Edge, ConditionalEdge
-from workflow.models.node_model import Node
-from workflow.models.state_model import State
+from src.graph.models.edge_model import Edge, ConditionalEdge
+from src.graph.models.node_model import Node
+from src.graph.models.state_model import State
 
 
 class Schema(BaseModel):
