@@ -1,7 +1,7 @@
 starting_urls:
   - https://langchain-ai.github.io/langgraph/
   - https://python-client.qdrant.tech/
-max_pages_per_sources:  500
+max_pages_per_sources:  100
 
 splitter:
   chunk_size: 1000
@@ -10,8 +10,9 @@ splitter:
 embedding:
     module: langchain_openai
     class_name: OpenAIEmbeddings
-    model_name: "text-embedding-3-large"
+    model_name: "text-embedding-3-small"
     dimension: 1536
+    api_key_env_name: OPENAI_API_KEY
 
 vector_store:
     module: src.retrieval.vector_stores.qdrant_store

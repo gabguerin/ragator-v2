@@ -1,48 +1,52 @@
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Dict, Any
 
-from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
 
-from retrieval.file_handlers.base_file import BaseFile
+from retrieval.file_handlers.file_handler import Chunk
 
 
 class BaseVectorStore(ABC):
-    def __init__(
+    """Abstract base class for vector stores."""
+
+    def __init__(self, embedding_model: Embeddings):
+        self.embedding_model = embedding_model
+        self.client = self.initialize_client()
+
+    @abstractmethod
+    def initialize_client(self, *args, **kwargs) -> Any:
+        """Initialize the vector store client."""
+        ...
+
+    @abstractmethod
+    async def create_collection(self, collection_name: str, vector_size: int) -> None:
+        ...
+
+    @abstractmethod
+    async def create_or_overwrite_collection_if_exists(
+            self, collection_name: str, vector_size: int
+    ) -> None:
+        ...
+
+    @abstractmethod
+    async def delete_collection(self, collection_name: str) -> None:
+        ...
+
+    @abstractmethod
+    async def upsert_points(
         self,
         collection_name: str,
-        embedding_model: Embeddings,
-        local_path: str | None = None,
-        url: str | None = None,
-        api_key: str | None = None,
-    ):
-        """Initialize AsyncQdrantVectorStore."""
-        self.collection_name = collection_name
-        self.embedding_model = embedding_model
-        self.client = self.initialize_client(
-            local_path=local_path, url=url, api_key=api_key
-        )
+        chunks: List[Chunk],
+        batch_size: int = 128,
+    ) -> None:
+        ...
 
     @abstractmethod
-    def initialize_client(
-        self,
-        local_path: str | None = None,
-        url: str | None = None,
-        api_key: str | None = None,
-    ):
-        """Set up vector store client/connection."""
-        pass
+    async def similarity_search(
+        self, collection_name: str, query: str, k: int
+    ) -> List[Dict[str, Any]]:
+        ...
 
     @abstractmethod
-    async def add_documents(self, documents: List[Document]):
-        """Add or update documents in the vector store."""
-        pass
-
-    @abstractmethod
-    async def similarity_search(self, query: str, k: int = 5) -> List[Document]:
-        """Retrieve top-k similar documents based on a query."""
-        pass
-
-    async def upsert_from_file(self, file: BaseFile):
-        documents = await file.to_documents()
-        await self.add_documents(documents)
+    async def delete_point(self, collection_name: str, point_id: str):
+        ...

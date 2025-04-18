@@ -8,9 +8,11 @@ from src.utils.urllib import crawl_website
 
 
 async def _main(
-    max_pages_per_sources: int, all_urls_to_download_file_path: str
+    max_pages_per_sources: int,
+    all_urls_to_download_file_path: str,
+    params_file_path: str,
 ) -> None:
-    with open("scripts/populate_qdrant_collection/params.yaml") as f:
+    with open(params_file_path) as f:
         starting_urls = yaml.safe_load(f)["starting_urls"]
 
     all_urls = []
@@ -29,11 +31,13 @@ async def _main(
 def main(
     max_pages_per_sources: Annotated[int, typer.Option(...)],
     all_urls_to_download_file_path: Annotated[str, typer.Option(...)],
+    params_file_path: Annotated[str, typer.Option(...)],
 ) -> None:
     asyncio.run(
         _main(
             max_pages_per_sources=max_pages_per_sources,
             all_urls_to_download_file_path=all_urls_to_download_file_path,
+            params_file_path=params_file_path,
         ),
     )
 

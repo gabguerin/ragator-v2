@@ -5,8 +5,9 @@ description = ""
 authors = [{ name = "Gabriel Guerin", email = "gabriel.guerin@theodo.com" }]
 requires-python = "==3.11.*"
 dependencies = [
+    "aiofiles>=24.1.0",
     "bs4>=0.0.2",
-    "chainlit>=2.4.400",
+    "dotenv>=0.9.9",
     "dvc[gs]>=3.59.1",
     "fastparquet>=2024.11.0",
     "gitpython>=3.1.44",

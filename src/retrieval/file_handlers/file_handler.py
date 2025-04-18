@@ -2,7 +2,7 @@ import hashlib
 from pathlib import Path
 from typing import List
 from abc import ABC, abstractmethod
-from uuid import UUID, uuid5, NAMESPACE_DNS
+from uuid import uuid5, NAMESPACE_DNS
 
 import aiofiles
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -13,7 +13,6 @@ class Chunk(BaseModel):
     content: str = Field(default_factory=str)
     source: str = Field(default_factory=str)
     uuid: str = Field(default_factory=str)
-    embedding: list[float] | None = None
 
 
 class FileHandler(ABC):
@@ -27,7 +26,7 @@ class FileHandler(ABC):
     @abstractmethod
     async def preprocess(self, file_content: str) -> str:
         """Async method to load file content."""
-        return file_content
+        ...
 
     async def load(self) -> str:
         """Async method to load file content."""

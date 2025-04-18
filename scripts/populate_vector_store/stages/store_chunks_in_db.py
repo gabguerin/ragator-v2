@@ -1,12 +1,19 @@
+import os
 from typing import Annotated, Any
 
 import pandas as pd
 import typer
 import asyncio
 
+from dotenv import load_dotenv
 from langchain_core.embeddings import Embeddings
 
+from retrieval.file_handlers.file_handler import Chunk
+from retrieval.vector_stores.base_store import BaseVectorStore
 from utils.importlib import import_module_from_path
+
+
+load_dotenv()
 
 
 async def _main(
@@ -15,33 +22,38 @@ async def _main(
     embedding_class_name: str,
     embedding_model_name: str,
     embedding_dimension: int,
+    embedding_api_key_env_name: str,
     vector_store_module: str,
     vector_store_class_name: str,
     vector_store_collection_name: str,
 ) -> None:
-    chunks_data = pd.read_parquet(chunks_parquet_path, engine="pyarrow")
+    chunks_data_df = pd.read_parquet(chunks_parquet_path, engine="pyarrow")
+    chunks = [
+        Chunk(**chunk_data) for chunk_data in chunks_data_df.to_dict(orient="records")
+    ]
 
     # Load embedding model
     embedding_model_class: Any = import_module_from_path(
         module_path=embedding_module, object_name=embedding_class_name
     )
     embedding_model: Embeddings = embedding_model_class(
-        model=embedding_model_name, dimensions=embedding_dimension
+        model=embedding_model_name,
+        dimensions=embedding_dimension,
+        api_key=os.getenv(embedding_api_key_env_name),
     )
 
     # Create vector store
     vector_store_class: Any = import_module_from_path(
         module_path=vector_store_module, object_name=vector_store_class_name
     )
-    vector_store = vector_store_class(embedding_model=embedding_model)
-    await vector_store.create_collection_if_not_exists(
+    vector_store: BaseVectorStore = vector_store_class(embedding_model=embedding_model)
+    await vector_store.create_or_overwrite_collection_if_exists(
         collection_name=vector_store_collection_name, vector_size=embedding_dimension
     )
 
-    await vector_store.insert_documents(
+    await vector_store.upsert_points(
         collection_name=vector_store_collection_name,
-        texts=chunks_data["content"].tolist(),
-        metadata=chunks_data.drop(columns=["text"]).to_dict(orient="records"),
+        chunks=chunks,
     )
 
 
@@ -51,6 +63,7 @@ def main(
     embedding_class_name: Annotated[str, typer.Option(...)],
     embedding_model_name: Annotated[str, typer.Option(...)],
     embedding_dimension: Annotated[int, typer.Option(...)],
+    embedding_api_key_env_name: Annotated[str, typer.Option(...)],
     vector_store_module: Annotated[str, typer.Option(...)],
     vector_store_class_name: Annotated[str, typer.Option(...)],
     vector_store_collection_name: Annotated[str, typer.Option(...)],
@@ -62,6 +75,7 @@ def main(
             embedding_class_name=embedding_class_name,
             embedding_model_name=embedding_model_name,
             embedding_dimension=embedding_dimension,
+            embedding_api_key_env_name=embedding_api_key_env_name,
             vector_store_module=vector_store_module,
             vector_store_class_name=vector_store_class_name,
             vector_store_collection_name=vector_store_collection_name,

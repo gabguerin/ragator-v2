@@ -1,5 +1,5 @@
 vars:
-  - script_folder_path: scripts/populate_qdrant_collection
+  - script_folder_path: scripts/populate_vector_store
   - data_folder_path: data/rag_about_ragator
 
 stages:
@@ -9,6 +9,7 @@ stages:
       PYTHONPATH=. python ${script_folder_path}/stages/get_all_urls_to_download.py
         --max-pages-per-sources ${max_pages_per_sources}
         --all-urls-to-download-file-path ${data_folder_path}/html_urls_to_download.txt
+        --params-file-path ${script_folder_path}/params.yaml
     deps:
       - ${script_folder_path}/stages/get_all_urls_to_download.py
     params:
@@ -34,8 +35,8 @@ stages:
     cmd:
       PYTHONPATH=. python ${script_folder_path}/stages/split_documents_into_chunks.py
         --downloaded-html-pages-folder ${data_folder_path}/downloaded_html_pages
-        --chunk-size ${embedding_model.chunk_size}
-        --chunk-overlap ${embedding_model.chunk_overlap}
+        --chunk-size ${splitter.chunk_size}
+        --chunk-overlap ${splitter.chunk_overlap}
         --chunks-parquet-path ${data_folder_path}/chunks.parquet.gzip
     deps:
       - ${script_folder_path}/stages/split_documents_into_chunks.py
@@ -56,6 +57,7 @@ stages:
         --embedding-class-name ${embedding.class_name}
         --embedding-model-name ${embedding.model_name}
         --embedding-dimension ${embedding.dimension}
+        --embedding-api-key-env-name ${embedding.api_key_env_name}
         --vector-store-module ${vector_store.module}
         --vector-store-class-name ${vector_store.class_name}
         --vector-store-collection-name ${vector_store.collection_name}
@@ -64,10 +66,11 @@ stages:
       - ${data_folder_path}/chunks.parquet.gzip
     params:
       - ${script_folder_path}/params.yaml:
-        - embedding.module_name
+        - embedding.module
         - embedding.class_name
         - embedding.model_name
         - embedding.dimension
+        - embedding.api_key_env_name
         - vector_store.module
         - vector_store.class_name
         - vector_store.collection_name
