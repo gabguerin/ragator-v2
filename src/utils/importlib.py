@@ -3,9 +3,10 @@ Module: Utilities
 This module provides utility functions for dynamic module and object imports.
 """
 import importlib
+from typing import Any
 
 
-def import_module_from_path(module_path: str, object_name: str) -> object:
+def import_module_from_path(module_path: str, object_name: str) -> Any:
     """
     Dynamically imports a module and retrieves an object from it.
 

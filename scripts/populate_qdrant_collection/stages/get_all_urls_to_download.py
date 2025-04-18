@@ -8,8 +8,7 @@ from src.utils.urllib import crawl_website
 
 
 async def _main(
-    max_pages_per_sources: int,
-    all_urls_to_download_file_path: str
+    max_pages_per_sources: int, all_urls_to_download_file_path: str
 ) -> None:
     with open("scripts/populate_qdrant_collection/params.yaml") as f:
         starting_urls = yaml.safe_load(f)["starting_urls"]

@@ -42,7 +42,32 @@ stages:
       - ${data_folder_path}/downloaded_html_pages
     params:
       - ${script_folder_path}/params.yaml:
-        - embedding_model.chunk_size
-        - embedding_model.chunk_overlap
+        - splitter.chunk_size
+        - splitter.chunk_overlap
     outs:
       - ${data_folder_path}/chunks.parquet.gzip
+
+  store_chunks_in_db:
+    wdir: ../..
+    cmd:
+      PYTHONPATH=. python ${script_folder_path}/stages/store_chunks_in_db.py
+        --chunks-parquet-path ${data_folder_path}/chunks.parquet.gzip
+        --embedding-module ${embedding.module}
+        --embedding-class-name ${embedding.class_name}
+        --embedding-model-name ${embedding.model_name}
+        --embedding-dimension ${embedding.dimension}
+        --vector-store-module ${vector_store.module}
+        --vector-store-class-name ${vector_store.class_name}
+        --vector-store-collection-name ${vector_store.collection_name}
+    deps:
+      - ${script_folder_path}/stages/store_chunks_in_db.py
+      - ${data_folder_path}/chunks.parquet.gzip
+    params:
+      - ${script_folder_path}/params.yaml:
+        - embedding.module_name
+        - embedding.class_name
+        - embedding.model_name
+        - embedding.dimension
+        - vector_store.module
+        - vector_store.class_name
+        - vector_store.collection_name

@@ -51,7 +51,8 @@ class FileHandler(ABC):
                 source=self.filepath.name,
                 uuid=str(
                     uuid5(
-                        NAMESPACE_DNS, hashlib.sha256(chunk_content.encode()).hexdigest()
+                        NAMESPACE_DNS,
+                        hashlib.sha256(chunk_content.encode()).hexdigest(),
                     )
                 ),
             )

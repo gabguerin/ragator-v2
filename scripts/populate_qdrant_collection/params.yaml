@@ -1,15 +1,19 @@
 starting_urls:
   - https://langchain-ai.github.io/langgraph/
   - https://python-client.qdrant.tech/
-max_pages_per_sources:  100
+max_pages_per_sources:  500
 
-embedding_model:
-    module: src.generation.embeddings.openai_embedding
-    name: text-embedding-3-large
-    chunk_size: 500
-    chunk_overlap: 50
+splitter:
+  chunk_size: 1000
+  chunk_overlap: 200
+
+embedding:
+    module: langchain_openai
+    class_name: OpenAIEmbeddings
+    model_name: "text-embedding-3-large"
+    dimension: 1536
 
 vector_store:
     module: src.retrieval.vector_stores.qdrant_store
-    class: QdrantStore
+    class_name: QdrantStore
     collection_name: "ragator-collection"

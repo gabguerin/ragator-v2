@@ -24,7 +24,9 @@ async def _main(
         chunks = await file.to_chunks()
         chunks_data.extend([chunk.model_dump() for chunk in chunks])
 
-    pd.DataFrame(chunks_data).to_parquet(chunks_parquet_path, engine="pyarrow", compression="gzip")
+    pd.DataFrame(chunks_data).to_parquet(
+        chunks_parquet_path, engine="pyarrow", compression="gzip"
+    )
 
 
 def main(
