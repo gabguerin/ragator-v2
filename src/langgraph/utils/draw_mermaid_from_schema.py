@@ -4,7 +4,7 @@ Generates and prints a Mermaid diagram from a workflow schema.
 """
 
 from paths import WORKFLOW_SCHEMAS_FOLDER_PATH
-from src.workflow.load_rag_workflow_from_schema import load_rag_workflow_from_schema
+from src.langgraph.load_rag_workflow_from_schema import load_rag_workflow_from_schema
 
 
 def main() -> None:

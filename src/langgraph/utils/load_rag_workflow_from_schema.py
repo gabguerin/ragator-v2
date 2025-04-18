@@ -5,7 +5,7 @@ from langgraph.constants import END
 from langgraph.graph.state import CompiledStateGraph, StateGraph
 
 from utils.importlib import import_module_from_path
-from src.graph.models.schema_model import Schema
+from src.langgraph.models.schema_model import Schema
 
 
 def load_rag_workflow_from_schema(yaml_path: Path) -> "CompiledStateGraph":

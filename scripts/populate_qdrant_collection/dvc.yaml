@@ -7,12 +7,12 @@ stages:
     wdir: ../..
     cmd:
       PYTHONPATH=. python ${script_folder_path}/stages/get_all_urls_to_download.py
+        --max-pages-per-sources ${max_pages_per_sources}
         --all-urls-to-download-file-path ${data_folder_path}/html_urls_to_download.txt
     deps:
       - ${script_folder_path}/stages/get_all_urls_to_download.py
     params:
       - ${script_folder_path}/params.yaml:
-        - sources
         - max_pages_per_sources
     outs:
       - ${data_folder_path}/html_urls_to_download.txt
@@ -25,21 +25,23 @@ stages:
        --downloaded-html-pages-folder ${data_folder_path}/downloaded_html_pages
     deps:
       - ${script_folder_path}/stages/download_html_pages.py
+      - ${data_folder_path}/html_urls_to_download.txt
     outs:
       - ${data_folder_path}/downloaded_html_pages
 
-  get_chunks_from_html_pages:
+  split_documents_into_chunks:
     wdir: ../..
     cmd:
-      PYTHONPATH=. python ${script_folder_path}/stages/get_chunks_from_html_pages.py
+      PYTHONPATH=. python ${script_folder_path}/stages/split_documents_into_chunks.py
         --downloaded-html-pages-folder ${data_folder_path}/downloaded_html_pages
+        --chunk-size ${embedding_model.chunk_size}
+        --chunk-overlap ${embedding_model.chunk_overlap}
         --chunks-parquet-path ${data_folder_path}/chunks.parquet.gzip
     deps:
-      - ${script_folder_path}/stages/get_chunks_from_html_pages.py
+      - ${script_folder_path}/stages/split_documents_into_chunks.py
+      - ${data_folder_path}/downloaded_html_pages
     params:
       - ${script_folder_path}/params.yaml:
-        - embedding_model.name
-        - embedding_model.type
         - embedding_model.chunk_size
         - embedding_model.chunk_overlap
     outs:

@@ -4,7 +4,7 @@ from typing import List
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
 
-from retrieval.files.base_file import BaseFile
+from retrieval.file_handlers.base_file import BaseFile
 
 
 class BaseVectorStore(ABC):

@@ -1,9 +1,9 @@
 from typing import List
 from pydantic import BaseModel
 
-from src.graph.models.edge_model import Edge, ConditionalEdge
-from src.graph.models.node_model import Node
-from src.graph.models.state_model import State
+from src.langgraph.models.edge_model import Edge, ConditionalEdge
+from src.langgraph.models.node_model import Node
+from src.langgraph.models.state_model import State
 
 
 class Schema(BaseModel):

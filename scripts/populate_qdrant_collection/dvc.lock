@@ -2,38 +2,39 @@ schema: '2.0'
 stages:
   get_all_urls_to_download:
     cmd: PYTHONPATH=. python scripts/populate_qdrant_collection/stages/get_all_urls_to_download.py
-      --all-urls-to-download-file-path data/rag_about_ragator/html_urls_to_download.txt
+      --max-pages-per-sources 100 --all-urls-to-download-file-path data/rag_about_ragator/html_urls_to_download.txt
     deps:
     - path: scripts/populate_qdrant_collection/stages/get_all_urls_to_download.py
       hash: md5
-      md5: 15179047903769c1554669f282e32cac
-      size: 886
+      md5: 0ff969846917d3968295663c7627be37
+      size: 1118
     params:
       scripts/populate_qdrant_collection/params.yaml:
         max_pages_per_sources: 100
-        sources:
-        - https://langchain-ai.github.io/langgraph/
-        - https://python-client.qdrant.tech/
     outs:
     - path: data/rag_about_ragator/html_urls_to_download.txt
       hash: md5
-      md5: 64d44c56675384ee5d5ba2398f82efb0
-      size: 12871
+      md5: a818b6346f657e865b78308ba186ce22
+      size: 12609
   download_html_pages:
     cmd: PYTHONPATH=. python scripts/populate_qdrant_collection/stages/download_html_pages.py
       --all-urls-to-download-file-path data/rag_about_ragator/html_urls_to_download.txt
       --downloaded-html-pages-folder data/rag_about_ragator/downloaded_html_pages
     deps:
+    - path: data/rag_about_ragator/html_urls_to_download.txt
+      hash: md5
+      md5: a818b6346f657e865b78308ba186ce22
+      size: 12609
     - path: scripts/populate_qdrant_collection/stages/download_html_pages.py
       hash: md5
-      md5: 15389ebd47edffe8d2a8b76e3b945467
-      size: 893
+      md5: e2158a00b6cfaa8bd9563429c8aba8ab
+      size: 969
     outs:
     - path: data/rag_about_ragator/downloaded_html_pages
       hash: md5
-      md5: 97b4fc45239cc0c093e3368986f0ea14.dir
-      size: 29339050
-      nfiles: 176
+      md5: 336fb873978c9006577de5edd5c9a767.dir
+      size: 29358694
+      nfiles: 178
   get_chunks_from_html_pages:
     cmd: PYTHONPATH=. python scripts/populate_qdrant_collection/stages/get_chunks_from_html_pages.py
       --downloaded-html-pages-folder data/rag_about_ragator/downloaded_html_pages
@@ -54,3 +55,41 @@ stages:
       hash: md5
       md5: 7c70c4bb4164be191ed74f1e019b6557
       size: 600
+  preprocess_html_pages:
+    cmd: PYTHONPATH=. python scripts/populate_qdrant_collection/stages/preprocess_html_pages.py
+      --downloaded-html-pages-folder data/rag_about_ragator/downloaded_html_pages
+      --preprocessed-documents-folder data/rag_about_ragator/preprocessed_documents
+    deps:
+    - path: scripts/populate_qdrant_collection/stages/preprocess_html_pages.py
+      hash: md5
+      md5: 79d3292b20e080ee78a31b2c89a30d55
+      size: 1034
+    outs:
+    - path: data/rag_about_ragator/preprocessed_documents
+      hash: md5
+      md5: a56ba052762f822e52835096652b2675.dir
+      size: 9249136
+      nfiles: 178
+  split_documents_into_chunks:
+    cmd: PYTHONPATH=. python scripts/populate_qdrant_collection/stages/split_documents_into_chunks.py
+      --downloaded-html-pages-folder data/rag_about_ragator/downloaded_html_pages
+      --chunk-size 500 --chunk-overlap 50 --chunks-parquet-path data/rag_about_ragator/chunks.parquet.gzip
+    deps:
+    - path: data/rag_about_ragator/downloaded_html_pages
+      hash: md5
+      md5: 336fb873978c9006577de5edd5c9a767.dir
+      size: 29358694
+      nfiles: 178
+    - path: scripts/populate_qdrant_collection/stages/split_documents_into_chunks.py
+      hash: md5
+      md5: 1566aa04264164cd1731010c6e5f0dc7
+      size: 1309
+    params:
+      scripts/populate_qdrant_collection/params.yaml:
+        embedding_model.chunk_overlap: 50
+        embedding_model.chunk_size: 500
+    outs:
+    - path: data/rag_about_ragator/chunks.parquet.gzip
+      hash: md5
+      md5: e06cf9794b5481d61805c42d357f60b3
+      size: 6138038

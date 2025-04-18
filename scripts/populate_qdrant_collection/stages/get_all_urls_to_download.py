@@ -1,20 +1,24 @@
 from typing import Annotated
 import typer
-import yaml
 import asyncio
 
-from utils.urllib import crawl_website
+import yaml
+
+from src.utils.urllib import crawl_website
 
 
-async def _main(all_urls_to_download_file_path: str) -> None:
+async def _main(
+    max_pages_per_sources: int,
+    all_urls_to_download_file_path: str
+) -> None:
     with open("scripts/populate_qdrant_collection/params.yaml") as f:
-        params = yaml.safe_load(f)
+        starting_urls = yaml.safe_load(f)["starting_urls"]
 
     all_urls = []
-    for url in params["sources"]:
+    for url in starting_urls:
         print(f"Crawling {url}")
         try:
-            urls = await crawl_website(url, max_pages=params["max_pages_per_sources"])
+            urls = await crawl_website(url, max_pages=max_pages_per_sources)
             all_urls.extend(urls)
         except Exception as e:
             print(f"Failed to crawl {url}: {e}")
@@ -24,10 +28,14 @@ async def _main(all_urls_to_download_file_path: str) -> None:
 
 
 def main(
+    max_pages_per_sources: Annotated[int, typer.Option(...)],
     all_urls_to_download_file_path: Annotated[str, typer.Option(...)],
 ) -> None:
     asyncio.run(
-        _main(all_urls_to_download_file_path),
+        _main(
+            max_pages_per_sources=max_pages_per_sources,
+            all_urls_to_download_file_path=all_urls_to_download_file_path,
+        ),
     )
 
 

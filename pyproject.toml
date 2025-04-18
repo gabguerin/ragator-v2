@@ -16,6 +16,7 @@ dependencies = [
     "langfuse>=2.60.2",
     "langgraph>=0.3.27",
     "lxml-html-clean>=0.4.2",
+    "markdownify>=1.1.0",
     "openai>=1.73.0",
     "pandas>=2.2.3",
     "pyarrow>=19.0.1",

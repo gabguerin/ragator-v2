@@ -5,7 +5,7 @@ from langchain_core.documents import Document
 from qdrant_client import AsyncQdrantClient
 from qdrant_client.grpc import PointStruct
 
-from retrieval.vectorstores.base_vectorstore import BaseVectorStore
+from retrieval.vector_stores.base_vectorstore import BaseVectorStore
 
 
 class QdrantVectorStore(BaseVectorStore):

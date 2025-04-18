@@ -1,11 +1,11 @@
-sources:
+starting_urls:
   - https://langchain-ai.github.io/langgraph/
   - https://python-client.qdrant.tech/
 max_pages_per_sources:  100
 
 embedding_model:
+    module: src.generation.embeddings.openai_embedding
     name: text-embedding-3-large
-    type: openai
     chunk_size: 500
     chunk_overlap: 50
 

@@ -1,10 +1,11 @@
 import asyncio
+import os
 from pathlib import Path
 from typing import Annotated
 
 import typer
 
-from utils.httpx import download_web_page
+from src.utils.httpx import download_web_page
 
 
 async def _main(
@@ -25,6 +26,8 @@ def main(
     all_urls_to_download_file_path: Annotated[Path, typer.Option(...)],
     downloaded_html_pages_folder: Annotated[Path, typer.Option(...)],
 ) -> None:
+    os.makedirs(downloaded_html_pages_folder, exist_ok=True)
+
     asyncio.run(
         _main(all_urls_to_download_file_path, downloaded_html_pages_folder),
     )
