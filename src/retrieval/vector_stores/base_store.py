@@ -1,9 +1,10 @@
+"""Abstract base class for vector stores."""
 from abc import ABC, abstractmethod
-from typing import List, Dict, Any
+from typing import List, Any
 
 from langchain_core.embeddings import Embeddings
 
-from retrieval.file_handlers.file_handler import Chunk
+from retrieval.chunks.base_chunk import Chunk
 
 
 class BaseVectorStore(ABC):
@@ -20,20 +21,23 @@ class BaseVectorStore(ABC):
 
     @abstractmethod
     async def create_collection(self, collection_name: str, vector_size: int) -> None:
+        """Create a new collection in the vector store."""
         ...
 
     @abstractmethod
     async def create_or_overwrite_collection_if_exists(
-            self, collection_name: str, vector_size: int
+        self, collection_name: str, vector_size: int
     ) -> None:
+        """Create a collection or overwrite it if it already exists."""
         ...
 
     @abstractmethod
     async def delete_collection(self, collection_name: str) -> None:
+        """Delete a collection from the vector store."""
         ...
 
     @abstractmethod
-    async def upsert_points(
+    async def upsert_chunks(
         self,
         collection_name: str,
         chunks: List[Chunk],
@@ -44,7 +48,7 @@ class BaseVectorStore(ABC):
     @abstractmethod
     async def similarity_search(
         self, collection_name: str, query: str, k: int
-    ) -> List[Dict[str, Any]]:
+    ) -> List[Chunk]:
         ...
 
     @abstractmethod

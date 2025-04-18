@@ -6,13 +6,8 @@ from uuid import uuid5, NAMESPACE_DNS
 
 import aiofiles
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from pydantic import BaseModel, Field
 
-
-class Chunk(BaseModel):
-    content: str = Field(default_factory=str)
-    source: str = Field(default_factory=str)
-    uuid: str = Field(default_factory=str)
+from retrieval.chunks.base_chunk import Chunk
 
 
 class FileHandler(ABC):

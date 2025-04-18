@@ -12,7 +12,6 @@ embedding:
     class_name: OpenAIEmbeddings
     model_name: "text-embedding-3-small"
     dimension: 1536
-    api_key_env_name: OPENAI_API_KEY
 
 vector_store:
     module: src.retrieval.vector_stores.qdrant_store

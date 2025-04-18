@@ -39,7 +39,6 @@ async def _main(
     embedding_model: Embeddings = embedding_model_class(
         model=embedding_model_name,
         dimensions=embedding_dimension,
-        api_key=os.getenv(embedding_api_key_env_name),
     )
 
     # Create vector store
@@ -51,7 +50,7 @@ async def _main(
         collection_name=vector_store_collection_name, vector_size=embedding_dimension
     )
 
-    await vector_store.upsert_points(
+    await vector_store.upsert_chunks(
         collection_name=vector_store_collection_name,
         chunks=chunks,
     )

@@ -6,10 +6,6 @@ state:
 entry_point: get_user_metadata
 
 nodes:
-  - id: get_user_metadata
-    module_path: langgraph_rags.rag_about_ragator.nodes.get_user_metadata
-    function_name: main
-
   - id: classify_question
     module_path: langgraph_rags.rag_about_ragator.nodes.classify_question
     function_name: main

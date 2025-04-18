@@ -108,7 +108,7 @@ stages:
       size: 5692113
     - path: scripts/populate_vector_store/stages/store_chunks_in_db.py
       hash: md5
-      md5: 5c5eb9cb1b150d07498d7a01e444db42
+      md5: d6067bfd33473ce2938f7a2505841ee6
       size: 2947
     params:
       scripts/populate_vector_store/params.yaml:
