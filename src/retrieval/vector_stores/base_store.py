@@ -4,7 +4,7 @@ from typing import List, Any
 
 from langchain_core.embeddings import Embeddings
 
-from retrieval.chunks.base_chunk import Chunk
+from src.retrieval.chunk import Chunk
 
 
 class BaseVectorStore(ABC):

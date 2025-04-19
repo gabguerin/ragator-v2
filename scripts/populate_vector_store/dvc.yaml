@@ -1,6 +1,6 @@
 vars:
   - script_folder_path: scripts/populate_vector_store
-  - data_folder_path: data/rag_about_ragator
+  - data_folder_path: data/ragator
 
 stages:
   get_all_urls_to_download:
@@ -57,7 +57,6 @@ stages:
         --embedding-class-name ${embedding.class_name}
         --embedding-model-name ${embedding.model_name}
         --embedding-dimension ${embedding.dimension}
-        --embedding-api-key-env-name ${embedding.api_key_env_name}
         --vector-store-module ${vector_store.module}
         --vector-store-class-name ${vector_store.class_name}
         --vector-store-collection-name ${vector_store.collection_name}

@@ -11,8 +11,8 @@ from typing import List, Dict, Any
 
 from tqdm import tqdm
 
-from retrieval.chunks.base_chunk import Chunk
-from retrieval.vector_stores.base_store import BaseVectorStore
+from src.retrieval.chunk import Chunk
+from src.retrieval.vector_stores.base_store import BaseVectorStore
 
 load_dotenv()
 

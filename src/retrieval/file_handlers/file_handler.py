@@ -7,7 +7,7 @@ from uuid import uuid5, NAMESPACE_DNS
 import aiofiles
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-from retrieval.chunks.base_chunk import Chunk
+from src.retrieval.chunk import Chunk
 
 
 class FileHandler(ABC):

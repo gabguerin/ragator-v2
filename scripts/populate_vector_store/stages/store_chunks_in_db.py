@@ -8,9 +8,9 @@ import asyncio
 from dotenv import load_dotenv
 from langchain_core.embeddings import Embeddings
 
-from retrieval.file_handlers.file_handler import Chunk
-from retrieval.vector_stores.base_store import BaseVectorStore
-from utils.importlib import import_module_from_path
+from src.retrieval.chunk import Chunk
+from src.retrieval.vector_stores.base_store import BaseVectorStore
+from src.utils.importlib import import_module_from_path
 
 
 load_dotenv()
@@ -22,7 +22,6 @@ async def _main(
     embedding_class_name: str,
     embedding_model_name: str,
     embedding_dimension: int,
-    embedding_api_key_env_name: str,
     vector_store_module: str,
     vector_store_class_name: str,
     vector_store_collection_name: str,
@@ -50,6 +49,7 @@ async def _main(
         collection_name=vector_store_collection_name, vector_size=embedding_dimension
     )
 
+    # Insert chunks into the vector store
     await vector_store.upsert_chunks(
         collection_name=vector_store_collection_name,
         chunks=chunks,
@@ -62,7 +62,6 @@ def main(
     embedding_class_name: Annotated[str, typer.Option(...)],
     embedding_model_name: Annotated[str, typer.Option(...)],
     embedding_dimension: Annotated[int, typer.Option(...)],
-    embedding_api_key_env_name: Annotated[str, typer.Option(...)],
     vector_store_module: Annotated[str, typer.Option(...)],
     vector_store_class_name: Annotated[str, typer.Option(...)],
     vector_store_collection_name: Annotated[str, typer.Option(...)],
@@ -74,7 +73,6 @@ def main(
             embedding_class_name=embedding_class_name,
             embedding_model_name=embedding_model_name,
             embedding_dimension=embedding_dimension,
-            embedding_api_key_env_name=embedding_api_key_env_name,
             vector_store_module=vector_store_module,
             vector_store_class_name=vector_store_class_name,
             vector_store_collection_name=vector_store_collection_name,
