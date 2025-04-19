@@ -7,6 +7,7 @@ from langgraph.graph import add_messages
 from pydantic import BaseModel
 
 from rag_graphs.ragator.paths import RAG_PARAMS_PATH
+from src.retrieval.chunk import Chunk
 
 
 class ChatModelParams(BaseModel):
@@ -66,7 +67,7 @@ class RagState(BaseModel):
     # With the add_messages decorator, this will be a list of BaseMessage objects that will be updated after each node
     message_history: Annotated[Sequence[BaseMessage], add_messages]
     question_classification: str | None
-    context: List[str]
+    retrieved_chunks: List[Chunk]
 
     def model_post_init(self, __context) -> None:
         if self.rag_params is None and self.rag_params_path.exists():

@@ -7,7 +7,7 @@ from src.retrieval.vector_stores.base_store import BaseVectorStore
 from src.utils.importlib import import_module_from_path
 
 
-def main(state: RagState) -> RagState:
+def main(state: RagState):
     """Retrieve documents using a language model and a retriever."""
     embedding_params: EmbeddingParams = state.rag_params.embedding
     vector_store_params: VectorStoreParams = state.rag_params.vector_store
@@ -27,10 +27,10 @@ def main(state: RagState) -> RagState:
     )
     vector_store: BaseVectorStore = vector_store_class(embedding_model=embedding_model)
 
-    vector_store.similarity_search(
+    retrieved_chunks = vector_store.similarity_search(
         collection_name=vector_store_params.collection_name,
         query=state.message_history[-1].content,
         k=15,
     )
 
-    return state
+    return {"retrieved_chunks": retrieved_chunks}

@@ -46,7 +46,7 @@ class BaseVectorStore(ABC):
         ...
 
     @abstractmethod
-    async def similarity_search(
+    def similarity_search(
         self, collection_name: str, query: str, k: int
     ) -> List[Chunk]:
         ...

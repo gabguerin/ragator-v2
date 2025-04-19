@@ -14,13 +14,21 @@ def main(state: RagState):
         object_name=llm_instruction.model.class_name,
     )(model=llm_instruction.model.model_name)
 
+    # Retrieve the context based on the retrieved chunks
+    context = "\n".join(
+        [
+            f"Source: {chunk.source}\n\n Content: {chunk.content}"
+            for chunk in state.retrieved_chunks
+        ]
+    ) if state.retrieved_chunks else ""
+
     response = llm.invoke(
         [
             *state.message_history,
             SystemMessage(content=llm_instruction.system_prompt),
             HumanMessage(
                 content=llm_instruction.human_prompt.format(
-                    context=state.context or "",
+                    context=context,
                     question=state.current_message.user_question,
                 )
             ),

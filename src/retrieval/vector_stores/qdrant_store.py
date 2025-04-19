@@ -114,7 +114,7 @@ class QdrantStore(BaseVectorStore):
 
             await self.client.upsert(collection_name=collection_name, points=points)
 
-    async def similarity_search(
+    def similarity_search(
         self, collection_name: str, query: str, k: int = 5
     ) -> List[Chunk]:
         """
@@ -128,9 +128,9 @@ class QdrantStore(BaseVectorStore):
         Returns:
             List[Dict[str, Any]]: List of search results with metadata.
         """
-        query_vector = await self.embedding_model.aembed_query(query)
+        query_vector = self.embedding_model.embed_query(query)
 
-        results = await self.client.search(
+        results = self.client.search(
             collection_name=collection_name, query_vector=query_vector, limit=k
         )
 
