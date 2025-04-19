@@ -1,11 +1,11 @@
 from langchain_core.language_models import BaseChatModel
-from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
-from rag_graphs.ragator.models import RagState
+from rag_graphs.ragator.params import RagState
 from src.utils.importlib import import_module_from_path
 
 
-def main(state: RagState) -> RagState:
+def main(state: RagState):
     """Generate an answer using a language model based on the question classification."""
     llm_instruction = state.rag_params.llm_instructions["answer_rag_instruction"]
 
@@ -16,18 +16,15 @@ def main(state: RagState) -> RagState:
 
     response = llm.invoke(
         [
+            *state.message_history,
             SystemMessage(content=llm_instruction.system_prompt),
             HumanMessage(
                 content=llm_instruction.human_prompt.format(
-                    question=state.message_history[-1],
-                    context=state.documents,
+                    context=state.context or "",
+                    question=state.current_message.user_question,
                 )
             ),
         ],
     ).content
 
-    if not response:
-        raise ValueError("Invalid response from LLM")
-
-    state.answer = response
-    return state
+    return {"message_history": AIMessage(response)}
