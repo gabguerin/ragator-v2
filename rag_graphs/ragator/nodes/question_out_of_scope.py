@@ -21,4 +21,4 @@ def main(state: RagState):
         ],
     ).content
 
-    return {"message_history": AIMessage(response)}
+    return {"messages": AIMessage(response)}

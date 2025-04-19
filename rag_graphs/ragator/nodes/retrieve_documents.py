@@ -29,7 +29,7 @@ def main(state: RagState):
 
     retrieved_chunks = vector_store.similarity_search(
         collection_name=vector_store_params.collection_name,
-        query=state.message_history[-1].content,
+        query=state.messages[-1].content,
         k=15,
     )
 

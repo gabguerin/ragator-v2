@@ -25,3 +25,6 @@ __pycache__/
 .env
 
 credentials/
+
+chainlit.md
+.chainlit/translations

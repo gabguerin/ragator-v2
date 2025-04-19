@@ -19,7 +19,7 @@ def main(state: RagState):
             SystemMessage(content=llm_instruction.system_prompt),
             HumanMessage(
                 content=llm_instruction.human_prompt.format(
-                    question=state.current_message.user_question,
+                    question=state.messages[-1].content,
                 )
             ),
         ],

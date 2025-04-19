@@ -3,13 +3,13 @@ from pathlib import Path
 
 import yaml
 from langgraph.constants import END
-from langgraph.graph.state import CompiledStateGraph, StateGraph
+from langgraph.graph.state import StateGraph
 
 from src.utils.importlib import import_module_from_path
 from src.graph.models import Schema
 
 
-def compile_rag_graph(rag_graph_schema_yaml_path: Path) -> "CompiledStateGraph":
+def create_rag_graph(rag_graph_schema_yaml_path: str | Path) -> StateGraph:
     """Load a langgraph rag from a YAML schema file."""
     with open(rag_graph_schema_yaml_path, "r") as f:
         config = yaml.safe_load(f)
@@ -44,4 +44,4 @@ def compile_rag_graph(rag_graph_schema_yaml_path: Path) -> "CompiledStateGraph":
         else:
             rag_graph.add_edge(edge.from_node, edge.to_node)
 
-    return rag_graph.compile()
+    return rag_graph
