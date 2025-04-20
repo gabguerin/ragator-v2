@@ -56,7 +56,7 @@ class State(BaseModel):
     class_name: str
 
 
-class Schema(BaseModel):
+class RagGraphSchema(BaseModel):
     """
     A class representing a workflow schema.
     Attributes:

@@ -6,7 +6,7 @@ from langgraph.constants import END, START
 from langgraph.graph.state import StateGraph
 
 from src.utils.importlib import import_module_from_path
-from src.graph.models import Schema
+from src.graph.models import RagGraphSchema
 
 
 def create_rag_graph(rag_graph_schema_yaml_path: str | Path) -> StateGraph:
@@ -14,7 +14,7 @@ def create_rag_graph(rag_graph_schema_yaml_path: str | Path) -> StateGraph:
     with open(rag_graph_schema_yaml_path, "r") as f:
         config = yaml.safe_load(f)
 
-    rag_graph_schema = Schema(**config)
+    rag_graph_schema = RagGraphSchema(**config)
 
     state_class = import_module_from_path(
         module_path=rag_graph_schema.state.module_path,

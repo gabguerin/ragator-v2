@@ -50,7 +50,7 @@ llm_instructions:
 
       human_prompt: |
         "Context:
-        {retrieved_docs}
+        {context}
 
         Question: {question}
 
