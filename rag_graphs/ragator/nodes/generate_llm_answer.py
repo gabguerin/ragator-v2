@@ -5,7 +5,7 @@ from rag_graphs.ragator.params import RagState
 from src.utils.importlib import import_module_from_path
 
 
-def main(state: RagState):
+def main(state: RagState) -> RagState:
     """Generate an answer using a language model based on the question classification."""
     llm_instruction = state.rag_params.llm_instructions["answer_rag_instruction"]
 
@@ -15,12 +15,16 @@ def main(state: RagState):
     )(model=llm_instruction.model.model_name)
 
     # Retrieve the context based on the retrieved chunks
-    context = "\n".join(
-        [
-            f"Source: {chunk.source}\n\n Content: {chunk.content}"
-            for chunk in state.retrieved_chunks
-        ]
-    ) if state.retrieved_chunks else ""
+    context = (
+        "\n".join(
+            [
+                f"Source: {chunk.source}\n\n Content: {chunk.content}"
+                for chunk in state.retrieved_chunks
+            ]
+        )
+        if state.retrieved_chunks
+        else ""
+    )
 
     response = llm.invoke(
         [
@@ -35,4 +39,4 @@ def main(state: RagState):
         ],
     ).content
 
-    return {"messages": AIMessage(response)}
+    return state.copy(update={"messages": state.messages.append(AIMessage(response))})

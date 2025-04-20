@@ -7,9 +7,10 @@ from typing import Annotated
 
 import typer
 
-from src.graph.compile_rag_graph import compile_rag_graph
 
 from pathlib import Path
+
+from src.graph.create_rag_graph import create_rag_graph
 
 
 def update_readme_with_diagram(mermaid_diagram: str, rag_name: str):
@@ -40,9 +41,9 @@ def main(
     """
     Main function to load a workflow schema and draw it as a Mermaid diagram.
     """
-    rag_workflow = compile_rag_graph(
+    rag_workflow = create_rag_graph(
         rag_graph_schema_yaml_path=Path(f"rag_graphs/{rag_name}/rag_graph_schema.yaml")
-    )
+    ).compile()
 
     # Generate the Mermaid diagram
     mermaid_diagram = rag_workflow.get_graph().draw_mermaid()

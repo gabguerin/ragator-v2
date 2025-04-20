@@ -27,6 +27,7 @@ class LLMInstructionParams(BaseModel):
 
 class EmbeddingParams(BaseModel):
     """This class is used to define the embedding model."""
+
     module: str
     class_name: str
     model_name: str
@@ -35,6 +36,7 @@ class EmbeddingParams(BaseModel):
 
 class VectorStoreParams(BaseModel):
     """This class is used to define the vector store."""
+
     module: str
     class_name: str
     collection_name: str
@@ -44,14 +46,15 @@ class RagParams(BaseModel):
     """
     This class is used to define the parameters for the RAG.
     """
+
     embedding: EmbeddingParams
     vector_store: VectorStoreParams
     llm_instructions: dict[str, LLMInstructionParams]
 
 
 class RagState(BaseModel):
-    rag_params: RagParams | None
+    rag_params: RagParams
     # With the add_messages decorator, this will be a list of BaseMessage objects that will be updated after each node
-    messages: Annotated[Sequence[BaseMessage], add_messages]
+    messages: List[BaseMessage]
     question_classification: str | None
     retrieved_chunks: List[Chunk]

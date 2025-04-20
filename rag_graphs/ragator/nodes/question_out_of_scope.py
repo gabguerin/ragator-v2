@@ -5,9 +5,11 @@ from rag_graphs.ragator.params import RagState
 from src.utils.importlib import import_module_from_path
 
 
-def main(state: RagState):
+def main(state: RagState) -> RagState:
     """Generate a static answer using a language model to explain that the question is out of scope."""
-    llm_instruction = state.rag_params.llm_instructions["question_out_of_scope_instruction"]
+    llm_instruction = state.rag_params.llm_instructions[
+        "question_out_of_scope_instruction"
+    ]
 
     llm: BaseChatModel = import_module_from_path(
         module_path=llm_instruction.model.module,
@@ -21,4 +23,4 @@ def main(state: RagState):
         ],
     ).content
 
-    return {"messages": AIMessage(response)}
+    return state.copy(update={"messages": state.messages.append(AIMessage(response))})

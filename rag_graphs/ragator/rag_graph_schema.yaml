@@ -5,13 +5,9 @@ state:
     module_path: rag_graphs.ragator.params
     class_name: RagState
 
-entry_point: load_rag_params
+entry_point: classify_question
 
 nodes:
-  - id: load_rag_params
-    module_path: rag_graphs.ragator.nodes.load_rag_params
-    function_name: main
-
   - id: classify_question
     module_path: rag_graphs.ragator.nodes.classify_question
     function_name: main
@@ -29,9 +25,6 @@ nodes:
     function_name: main
 
 edges:
-  - from_node: load_rag_params
-    to_node: classify_question
-
   - from_node: classify_question
     condition:
         id: question_classification

@@ -5,9 +5,11 @@ from rag_graphs.ragator.params import RagState
 from src.utils.importlib import import_module_from_path
 
 
-def main(state: RagState):
+def main(state: RagState) -> RagState:
     """Classify the question using a language model."""
-    llm_instruction = state.rag_params.llm_instructions["question_classification_instruction"]
+    llm_instruction = state.rag_params.llm_instructions[
+        "question_classification_instruction"
+    ]
 
     llm: BaseChatModel = import_module_from_path(
         module_path=llm_instruction.model.module,
@@ -25,4 +27,4 @@ def main(state: RagState):
         ],
     ).content
 
-    return {"question_classification": response}
+    return state.copy(update={"question_classification": response})

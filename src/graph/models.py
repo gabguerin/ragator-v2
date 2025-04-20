@@ -27,17 +27,17 @@ class ConditionalEdge(BaseModel):
         condition (Node): The condition node that determines the next node.
         mapping (dict[str, str]): Key: the output of the node 'from_node', Value: the id of the next node
     """
+
     from_node: str
     condition: Node
-    mapping: dict[
-        str, str
-    ]
+    mapping: dict[str, str]
 
 
 class Edge(BaseModel):
     """
     A class representing a simple edge in a workflow.
     """
+
     from_node: str
     to_node: str
 
@@ -50,6 +50,7 @@ class State(BaseModel):
         module_path (str): The path to the module that defines the state.
         class_name (str): The name of the class associated with the state.
     """
+
     id: str
     module_path: str
     class_name: str
@@ -64,6 +65,7 @@ class Schema(BaseModel):
         nodes (List[Node]): A list of nodes in the workflow.
         edges (List[Edge | ConditionalEdge]): A list of edges in the workflow.
     """
+
     state: State
     entry_point: str
     nodes: List[Node]
