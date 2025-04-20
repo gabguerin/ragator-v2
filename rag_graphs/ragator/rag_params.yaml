@@ -23,7 +23,9 @@ llm_instructions:
         - "RAG" — for questions about Retrieval-Augmented Generation (RAG) in general.
         - "RAGATOR" — for questions about the Qdrant vector database or Langgraph or Ragator which is 
         the current Python project we are working on.
-        - "OTHER" — if the question is not about any of the above."
+        - "OTHER" — if the question is not about any of the above.
+        
+        Answer with a single word, which will be the category you have chosen."
 
       human_prompt: |
         "Classify the following question:

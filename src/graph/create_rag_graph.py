@@ -2,7 +2,7 @@
 from pathlib import Path
 
 import yaml
-from langgraph.constants import END
+from langgraph.constants import END, START
 from langgraph.graph.state import StateGraph
 
 from src.utils.importlib import import_module_from_path
@@ -27,21 +27,25 @@ def create_rag_graph(rag_graph_schema_yaml_path: str | Path) -> StateGraph:
         function = import_module_from_path(node.module_path, node.function_name)
         rag_graph.add_node(node.id, function)
 
-    # Add entry point
-    rag_graph.set_entry_point(rag_graph_schema.entry_point)
-
     # Add edges
     for edge in rag_graph_schema.edges:
-        if "condition" in edge.model_fields:
-            edge_function = import_module_from_path(
+        # Handle special cases for start nodes
+        edge.from_node = edge.from_node if edge.from_node != "__start__" else START
+
+        # If the edge is a normal edge, add it directly
+        if "to_node" in edge.model_fields:
+            edge.to_node = edge.to_node if edge.to_node != "__end__" else END
+            rag_graph.add_edge(edge.from_node, edge.to_node)
+
+        # If the edge is a conditional edge, import the router function and add it
+        else:
+            router = import_module_from_path(
                 edge.condition.module_path, edge.condition.function_name
             )
             mapping = {
-                from_condition: (END if to_node == "__end__" else to_node)
+                from_condition: to_node if to_node != "__end__" else END
                 for from_condition, to_node in edge.mapping.items()
             }
-            rag_graph.add_conditional_edges(edge.from_node, edge_function, mapping)
-        else:
-            rag_graph.add_edge(edge.from_node, edge.to_node)
+            rag_graph.add_conditional_edges(edge.from_node, router, mapping)
 
     return rag_graph

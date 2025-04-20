@@ -1,13 +1,15 @@
 from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import HumanMessage, SystemMessage
 
-from rag_graphs.ragator.params import RagState
+from rag_graphs.ragator.params import RagState, RagParams
 from src.utils.importlib import import_module_from_path
 
 
-def main(state: RagState) -> RagState:
+def main(state: RagState) -> dict:
     """Classify the question using a language model."""
-    llm_instruction = state.rag_params.llm_instructions[
+    print("State:", state)
+    rag_params = RagParams(**state["rag_params"])
+    llm_instruction = rag_params.llm_instructions[
         "question_classification_instruction"
     ]
 
@@ -21,10 +23,10 @@ def main(state: RagState) -> RagState:
             SystemMessage(content=llm_instruction.system_prompt),
             HumanMessage(
                 content=llm_instruction.human_prompt.format(
-                    question=state.messages[-1].content,
+                    question=state["messages"][-1].content,
                 )
             ),
         ],
     ).content
 
-    return state.copy(update={"question_classification": response})
+    return {"question_classification": response}

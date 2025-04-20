@@ -18,7 +18,7 @@ async def on_chat_start() -> None:
     """Called when the chat starts."""
     try:
         with open(RAG_PARAMS_PATH, "r") as f:
-            rag_params = RagParams(**yaml.safe_load(f))
+            rag_params = yaml.safe_load(f)
     except Exception as e:
         raise RuntimeError(f"Failed to load RAG params: {e}")
 
@@ -31,22 +31,17 @@ async def on_message(msg: cl.Message):
     cb = cl.LangchainCallbackHandler()
     final_answer = cl.Message(content="")
 
+    initial_state = {
+        "messages": [HumanMessage(content=msg.content)],
+        "rag_params": cl.user_session.get("rag_params"),
+        "question_classification": None,
+        "retrieved_chunks": [],
+    }
     # Initial RagState
-    initial_state = RagState(
-        rag_params=cl.user_session.get("rag_params"),
-        messages=[HumanMessage(content=msg.content)],
-        question_classification=None,
-        retrieved_chunks=[],
-    )
-
-    for state_update, metadata in graph.stream(
-        input=initial_state,
-        stream_mode="messages",
-        config=RunnableConfig(callbacks=[cb], **config),
-    ):
-        print(f"State Update: {state_update}, Metadata: {metadata}")
-        if metadata["langgraph_node"] == END:
-            last_msg = state_update.messages[-1]
-            await final_answer.stream_token(last_msg.content)
-
-    await final_answer.send()
+    async for output in graph.astream(initial_state, stream_mode="values",
+                                      config=RunnableConfig(callbacks=[cb], **config)):
+        print(f"State Update: {output}")
+        state = output["messages"][-1]
+        if isinstance(state, HumanMessage):
+            continue
+        await final_answer.stream_token(state.content)

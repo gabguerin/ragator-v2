@@ -25,6 +25,9 @@ nodes:
     function_name: main
 
 edges:
+  - from_node: __start__
+    to_node: classify_question
+
   - from_node: classify_question
     condition:
         id: question_classification
@@ -35,11 +38,9 @@ edges:
       RAG: generate_llm_answer
       OTHER: question_out_of_scope
 
-### STATIC ANSWER
   - from_node: question_out_of_scope
     to_node: __end__
 
-### RETRIEVAL AUGMENTED GENERATION
   - from_node: retrieve_documents
     to_node: generate_llm_answer
 

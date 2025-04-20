@@ -1,8 +1,10 @@
+import operator
 from typing import List, Annotated, Sequence
 
 from langchain_core.messages import BaseMessage
 from langgraph.graph import add_messages
 from pydantic import BaseModel
+from typing_extensions import TypedDict
 
 from src.retrieval.chunk import Chunk
 
@@ -52,9 +54,9 @@ class RagParams(BaseModel):
     llm_instructions: dict[str, LLMInstructionParams]
 
 
-class RagState(BaseModel):
-    rag_params: RagParams
-    # With the add_messages decorator, this will be a list of BaseMessage objects that will be updated after each node
-    messages: List[BaseMessage]
+class RagState(TypedDict):
+    # With the add operator, instead of updating the messages list, it will add the new messages to the list
+    messages: Annotated[Sequence[BaseMessage], operator.add]
+    rag_params: dict
     question_classification: str | None
     retrieved_chunks: List[Chunk]

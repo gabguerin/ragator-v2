@@ -1,13 +1,14 @@
 from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
-from rag_graphs.ragator.params import RagState
+from rag_graphs.ragator.params import RagState, RagParams
 from src.utils.importlib import import_module_from_path
 
 
-def main(state: RagState) -> RagState:
+def main(state: RagState) -> dict:
     """Generate an answer using a language model based on the question classification."""
-    llm_instruction = state.rag_params.llm_instructions["answer_rag_instruction"]
+    rag_params = RagParams(**state["rag_params"])
+    llm_instruction = rag_params.llm_instructions["answer_rag_instruction"]
 
     llm: BaseChatModel = import_module_from_path(
         module_path=llm_instruction.model.module,
@@ -19,24 +20,24 @@ def main(state: RagState) -> RagState:
         "\n".join(
             [
                 f"Source: {chunk.source}\n\n Content: {chunk.content}"
-                for chunk in state.retrieved_chunks
+                for chunk in state["retrieved_chunks"]
             ]
         )
-        if state.retrieved_chunks
+        if state["retrieved_chunks"]
         else ""
     )
 
     response = llm.invoke(
         [
-            *state.messages,
+            *state["messages"],
             SystemMessage(content=llm_instruction.system_prompt),
             HumanMessage(
                 content=llm_instruction.human_prompt.format(
                     context=context,
-                    question=state.messages[-1].content,
+                    question=state["messages"][-1].content,
                 )
             ),
         ],
     ).content
 
-    return state.copy(update={"messages": state.messages.append(AIMessage(response))})
+    return {"messages": [AIMessage(response)]}
