@@ -7,12 +7,12 @@ from qdrant_client import AsyncQdrantClient
 from qdrant_client.grpc import PointStruct
 
 from qdrant_client.models import Distance, VectorParams, PointStruct
-from typing import List, Dict, Any
+from typing import List, Dict
 
 from tqdm import tqdm
 
-from src.retrieval.chunk import Chunk
-from src.retrieval.vector_stores.base_store import BaseVectorStore
+from ..chunk import Chunk
+from .base import BaseVectorStore
 
 load_dotenv()
 

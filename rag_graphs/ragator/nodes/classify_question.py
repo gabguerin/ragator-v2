@@ -5,7 +5,7 @@ from rag_graphs.ragator.params import RagState, RagParams
 from src.utils.importlib import import_module_from_path
 
 
-def main(state: RagState) -> dict:
+def classify_question(state: RagState) -> dict:
     """Classify the question using a language model."""
     rag_params = RagParams(**state["rag_params"])
     llm_instruction = rag_params.llm_instructions["question_classification_instruction"]

@@ -10,7 +10,7 @@ import typer
 
 from pathlib import Path
 
-from src.graph.create_rag_graph import create_rag_graph
+from src.utils.importlib import import_module_from_path
 
 
 def update_readme_with_diagram(mermaid_diagram: str, rag_name: str):
@@ -41,9 +41,10 @@ def main(
     """
     Main function to load a workflow schema and draw it as a Mermaid diagram.
     """
-    rag_workflow = create_rag_graph(
-        rag_graph_schema_yaml_path=Path(f"rag_graphs/{rag_name}/rag_graph_schema.yaml")
-    ).compile()
+    rag_workflow = import_module_from_path(
+        module_path=f"rag_graphs.{rag_name}.graph",
+        object_name="graph",
+    )
 
     # Generate the Mermaid diagram
     mermaid_diagram = rag_workflow.get_graph().draw_mermaid()

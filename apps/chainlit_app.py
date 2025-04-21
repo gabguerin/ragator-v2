@@ -1,18 +1,22 @@
 # app.py
+from pathlib import Path
+
 import chainlit as cl
 import yaml
 from langchain_core.messages import HumanMessage
 from langchain_core.runnables import RunnableConfig
 
 from rag_graphs.ragator.graph import graph
-from rag_graphs.ragator.paths import RAG_PARAMS_PATH
+
+
+RAGATOR_PARAMS_PATH = Path("rag_graphs/ragator/rag_params.yaml")
 
 
 @cl.on_chat_start
 async def on_chat_start() -> None:
     """Called when the chat starts."""
     try:
-        with open(RAG_PARAMS_PATH, "r") as f:
+        with open(RAGATOR_PARAMS_PATH, "r") as f:
             rag_params = yaml.safe_load(f)
     except Exception as e:
         raise RuntimeError(f"Failed to load RAG params: {e}")

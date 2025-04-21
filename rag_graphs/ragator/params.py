@@ -1,4 +1,3 @@
-import operator
 from typing import List, Annotated, Sequence
 
 from langchain_core.messages import BaseMessage
@@ -42,6 +41,7 @@ class VectorStoreParams(BaseModel):
     module: str
     class_name: str
     collection_name: str
+    retrieve_top_k: int
 
 
 class RagParams(BaseModel):
@@ -56,7 +56,7 @@ class RagParams(BaseModel):
 
 class RagState(TypedDict):
     # With the add operator, instead of updating the messages list, it will add the new messages to the list
-    messages: Annotated[Sequence[BaseMessage], operator.add]
+    messages: Annotated[Sequence[BaseMessage], add_messages]
     rag_params: dict
     question_classification: str | None
     retrieved_chunks: List[Chunk]

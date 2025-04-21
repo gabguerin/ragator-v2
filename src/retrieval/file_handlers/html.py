@@ -5,10 +5,10 @@ Provides functionality to process and extract content from HTML files.
 
 from markdownify import markdownify
 
-from src.retrieval.file_handlers.file_handler import FileHandler
+from .base import BaseFileHandler
 
 
-class HtmlHandler(FileHandler):
+class HtmlFileHandler(BaseFileHandler):
     """
     Class for handling HTML file ingestion and processing.
     """

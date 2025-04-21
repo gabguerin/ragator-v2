@@ -5,7 +5,7 @@ from rag_graphs.ragator.params import RagState, RagParams
 from src.utils.importlib import import_module_from_path
 
 
-def main(state: RagState) -> dict:
+def generate_llm_response_from_context(state: RagState) -> dict:
     """Generate an answer using a language model based on the question classification."""
     rag_params = RagParams(**state["rag_params"])
     llm_instruction = rag_params.llm_instructions["answer_rag_instruction"]
@@ -23,8 +23,6 @@ def main(state: RagState) -> dict:
                 for chunk in state["retrieved_chunks"]
             ]
         )
-        if state["retrieved_chunks"]
-        else ""
     )
 
     response = llm.invoke(

@@ -8,22 +8,23 @@ vector_store:
     module: src.retrieval.vector_stores.qdrant_store
     class_name: QdrantStore
     collection_name: "ragator-collection"
+    retrieve_top_k: 10
 
 llm_instructions:
     question_classification_instruction:
       model:
-        module: langchain_openai
-        class_name: ChatOpenAI
+        module: src.generation.chat_models.openai
+        class_name: OpenAIChatModel
         model_name: "gpt-3.5-turbo"
 
       system_prompt: |
         "You are a classifier that assigns user questions to one of the following categories:
-        Return unique word, from one on of these three: RAG, RAGATOR, OTHER.
+        Return unique word, from one on of these three: RAG, RAGATOR, OUT_OF_SCOPE.
         
         - "RAG" — for questions about Retrieval-Augmented Generation (RAG) in general.
         - "RAGATOR" — for questions about the Qdrant vector database or Langgraph or Ragator which is 
         the current Python project we are working on.
-        - "OTHER" — if the question is not about any of the above.
+        - "OUT_OF_SCOPE" — if the question is not about any of the above.
         
         Answer with a single word, which will be the category you have chosen."
 
@@ -34,8 +35,8 @@ llm_instructions:
 
     answer_rag_instruction:
       model:
-        module: langchain_openai
-        class_name: ChatOpenAI
+        module: src.generation.chat_models.openai
+        class_name: OpenAIChatModel
         model_name: "gpt-4o-mini"
 
       system_prompt: |
@@ -58,8 +59,8 @@ llm_instructions:
 
     question_out_of_scope_instruction:
       model:
-        module: langchain_openai
-        class_name: ChatOpenAI
+        module: src.generation.chat_models.openai
+        class_name: OpenAIChatModel
         model_name: "gpt-3.5-turbo"
 
       system_prompt: |

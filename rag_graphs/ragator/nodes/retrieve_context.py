@@ -8,11 +8,11 @@ from rag_graphs.ragator.params import (
     VectorStoreParams,
     RagParams,
 )
-from src.retrieval.vector_stores.base_store import BaseVectorStore
+from src.retrieval.vector_stores.base import BaseVectorStore
 from src.utils.importlib import import_module_from_path
 
 
-async def main(state: RagState) -> dict:
+async def retrieve_context(state: RagState) -> dict:
     """Retrieve documents using a language model and a retriever."""
     rag_params = RagParams(**state["rag_params"])
     embedding_params: EmbeddingParams = rag_params.embedding
@@ -37,7 +37,7 @@ async def main(state: RagState) -> dict:
     retrieved_chunks = await vector_store.similarity_search(
         collection_name=vector_store_params.collection_name,
         query=state["messages"][-1].content,
-        k=15,
+        k=rag_params.retrieve_top_k,
     )
 
     return {"retrieved_chunks": retrieved_chunks}

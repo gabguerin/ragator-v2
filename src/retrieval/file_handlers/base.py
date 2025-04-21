@@ -10,7 +10,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from src.retrieval.chunk import Chunk
 
 
-class FileHandler(ABC):
+class BaseFileHandler(ABC):
     def __init__(
         self, filepath: str | Path, chunk_size: int = 500, chunk_overlap: int = 50
     ):
