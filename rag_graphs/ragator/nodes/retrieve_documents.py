@@ -2,7 +2,12 @@ from typing import Any
 
 from langchain_core.embeddings import Embeddings
 
-from rag_graphs.ragator.params import RagState, EmbeddingParams, VectorStoreParams, RagParams
+from rag_graphs.ragator.params import (
+    RagState,
+    EmbeddingParams,
+    VectorStoreParams,
+    RagParams,
+)
 from src.retrieval.vector_stores.base_store import BaseVectorStore
 from src.utils.importlib import import_module_from_path
 

@@ -3,14 +3,9 @@ import chainlit as cl
 import yaml
 from langchain_core.messages import HumanMessage
 from langchain_core.runnables import RunnableConfig
-from langgraph.constants import END
 
-from rag_graphs.ragator.params import RagState, RagParams
-from rag_graphs.ragator.paths import RAG_PARAMS_PATH, RAG_GRAPH_SCHEMA_PATH
-from src.graph.create_rag_graph import create_rag_graph
-
-# Initialize the graph once (or per session if needed)
-graph = create_rag_graph(RAG_GRAPH_SCHEMA_PATH).compile()
+from rag_graphs.ragator.graph import graph
+from rag_graphs.ragator.paths import RAG_PARAMS_PATH
 
 
 @cl.on_chat_start
@@ -38,9 +33,11 @@ async def on_message(msg: cl.Message):
         "retrieved_chunks": [],
     }
     # Initial RagState
-    async for output in graph.astream(initial_state, stream_mode="values",
-                                      config=RunnableConfig(callbacks=[cb], **config)):
-        print(f"State Update: {output}")
+    async for output in graph.astream(
+        initial_state,
+        stream_mode="values",
+        config=RunnableConfig(callbacks=[cb], **config),
+    ):
         state = output["messages"][-1]
         if isinstance(state, HumanMessage):
             continue

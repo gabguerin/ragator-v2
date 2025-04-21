@@ -1,7 +1,6 @@
 from davia import Davia, run_server
 
-from src.graph.create_rag_graph import create_rag_graph
-
+from rag_graphs.ragator.graph import graph_builder
 
 davia_app = Davia()
 
@@ -11,8 +10,7 @@ def ragator_graph():
     """
     A minimal LangGraph agent that returns a greeting.
     """
-    graph = create_rag_graph("rag_graphs/ragator/rag_graph_schema.yaml")
-    return graph
+    return graph_builder
 
 
 #  Launch the server

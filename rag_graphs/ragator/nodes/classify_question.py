@@ -7,11 +7,8 @@ from src.utils.importlib import import_module_from_path
 
 def main(state: RagState) -> dict:
     """Classify the question using a language model."""
-    print("State:", state)
     rag_params = RagParams(**state["rag_params"])
-    llm_instruction = rag_params.llm_instructions[
-        "question_classification_instruction"
-    ]
+    llm_instruction = rag_params.llm_instructions["question_classification_instruction"]
 
     llm: BaseChatModel = import_module_from_path(
         module_path=llm_instruction.model.module,
