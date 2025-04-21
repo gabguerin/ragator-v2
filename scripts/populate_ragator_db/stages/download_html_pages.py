@@ -15,6 +15,7 @@ async def _main(
     with open(all_urls_to_download_file_path, "r") as f:
         all_urls_to_download = [line.strip() for line in f.readlines()]
 
+    os.makedirs(downloaded_html_pages_folder, exist_ok=True)
     for url in all_urls_to_download:
         try:
             await download_web_page(url, folder=downloaded_html_pages_folder)

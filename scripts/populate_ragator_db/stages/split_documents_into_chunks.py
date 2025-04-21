@@ -1,11 +1,12 @@
 import asyncio
+import os
 from pathlib import Path
 from typing import Annotated
 
 import pandas as pd
 import typer
 
-from src.retrieval.file_handlers.html_handler import HtmlHandler
+from src.retrieval.file_handlers.html import HtmlFileHandler
 
 
 async def _main(
@@ -16,7 +17,7 @@ async def _main(
 ) -> None:
     chunks_data = []
     for html_page_path in downloaded_html_pages_folder.glob("*"):
-        file = HtmlHandler(
+        file = HtmlFileHandler(
             html_page_path,
             chunk_size=chunk_size,
             chunk_overlap=chunk_overlap,
@@ -24,6 +25,7 @@ async def _main(
         chunks = await file.to_chunks()
         chunks_data.extend([chunk.model_dump() for chunk in chunks])
 
+    os.makedirs(os.path.dirname(chunks_parquet_path), exist_ok=True)
     pd.DataFrame(chunks_data).to_parquet(
         chunks_parquet_path, engine="pyarrow", compression="gzip"
     )

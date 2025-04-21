@@ -1,5 +1,5 @@
 vars:
-  - script_folder_path: scripts/populate_vector_store
+  - script_folder_path: scripts/populate_ragator_db
   - data_folder_path: data/ragator
 
 stages:
@@ -69,7 +69,6 @@ stages:
         - embedding.class_name
         - embedding.model_name
         - embedding.dimension
-        - embedding.api_key_env_name
         - vector_store.module
         - vector_store.class_name
         - vector_store.collection_name

@@ -1,4 +1,3 @@
-import os
 from typing import Annotated, Any
 
 import pandas as pd
@@ -9,7 +8,7 @@ from dotenv import load_dotenv
 from langchain_core.embeddings import Embeddings
 
 from src.retrieval.chunk import Chunk
-from src.retrieval.vector_stores.base_store import BaseVectorStore
+from src.retrieval.vector_stores.base import BaseVectorStore
 from src.utils.importlib import import_module_from_path
 
 

@@ -14,6 +14,6 @@ embedding:
     dimension: 1536
 
 vector_store:
-    module: src.retrieval.vector_stores.qdrant_store
+    module: src.retrieval.vector_stores.qdrant
     class_name: QdrantStore
     collection_name: "ragator-collection"

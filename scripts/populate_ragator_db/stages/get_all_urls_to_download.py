@@ -1,3 +1,4 @@
+import os
 from typing import Annotated
 import typer
 import asyncio
@@ -23,6 +24,8 @@ async def _main(
             all_urls.extend(urls)
         except Exception as e:
             print(f"Failed to crawl {url}: {e}")
+
+    os.makedirs(os.path.dirname(all_urls_to_download_file_path), exist_ok=True)
 
     with open(all_urls_to_download_file_path, "w") as f:
         f.write("\n".join(all_urls))

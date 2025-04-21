@@ -15,6 +15,7 @@ dependencies = [
     "gitpython>=3.1.44",
     "httpx>=0.28.1",
     "langchain>=0.3.23",
+    "langchain-openai>=0.3.14",
     "langfuse>=2.60.2",
     "langgraph>=0.3.27",
     "lxml-html-clean>=0.4.2",
