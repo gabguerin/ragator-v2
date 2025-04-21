@@ -1,11 +1,11 @@
 embedding:
-    module: langchain_openai
-    class_name: OpenAIEmbeddings
+    module: src.generation.embeddings.openai
+    class_name: OpenAIEmbeddingModel
     model_name: "text-embedding-3-small"
     dimension: 1536
 
 vector_store:
-    module: src.retrieval.vector_stores.qdrant_store
+    module: src.retrieval.vector_stores.qdrant
     class_name: QdrantStore
     collection_name: "ragator-collection"
     retrieve_top_k: 10
@@ -29,7 +29,10 @@ llm_instructions:
         Answer with a single word, which will be the category you have chosen."
 
       human_prompt: |
-        "Classify the following question:
+        "The message history of the conversation is:
+        {message_history}
+        
+        Classify the following question:
         
         {question}"
 
@@ -57,6 +60,23 @@ llm_instructions:
 
         Answer:"
 
+    question_about_rag_instruction:
+      model:
+        module: src.generation.chat_models.openai
+        class_name: OpenAIChatModel
+        model_name: "gpt-4o-mini"
+
+      system_prompt: |
+        "You are an expert assistant that helps developers understand RAGs.
+        You are answering based own your own knowledge about RAGs and the frameworks that help build them.
+        
+        As an expert, you are expected to provide accurate and concise answers."
+
+      human_prompt: |
+        "Question: {question}
+
+        Answer:"
+
     question_out_of_scope_instruction:
       model:
         module: src.generation.chat_models.openai
@@ -71,4 +91,4 @@ llm_instructions:
         Reply politely and informatively, explaining that the question is out of context and that you can only answer questions related to RAGs or the Ragator project."
 
       human_prompt: |
-        "Response:"
+        "Answer:"

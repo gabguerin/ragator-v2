@@ -1,11 +1,4 @@
-from typing import List, Annotated, Sequence
-
-from langchain_core.messages import BaseMessage
-from langgraph.graph import add_messages
 from pydantic import BaseModel
-from typing_extensions import TypedDict
-
-from src.retrieval.chunk import Chunk
 
 
 class ChatModelParams(BaseModel):
@@ -52,11 +45,3 @@ class RagParams(BaseModel):
     embedding: EmbeddingParams
     vector_store: VectorStoreParams
     llm_instructions: dict[str, LLMInstructionParams]
-
-
-class RagState(TypedDict):
-    # With the add operator, instead of updating the messages list, it will add the new messages to the list
-    messages: Annotated[Sequence[BaseMessage], add_messages]
-    rag_params: dict
-    question_classification: str | None
-    retrieved_chunks: List[Chunk]

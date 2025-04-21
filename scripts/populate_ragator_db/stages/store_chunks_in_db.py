@@ -35,7 +35,7 @@ async def _main(
         module_path=embedding_module, object_name=embedding_class_name
     )
     embedding_model: Embeddings = embedding_model_class(
-        model=embedding_model_name,
+        model_name=embedding_model_name,
         dimensions=embedding_dimension,
     )
 

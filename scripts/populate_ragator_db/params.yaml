@@ -8,8 +8,8 @@ splitter:
   chunk_overlap: 200
 
 embedding:
-    module: langchain_openai
-    class_name: OpenAIEmbeddings
+    module: src.generation.embeddings.openai
+    class_name: OpenAIEmbeddingModel
     model_name: "text-embedding-3-small"
     dimension: 1536
 

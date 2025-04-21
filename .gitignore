@@ -27,4 +27,4 @@ __pycache__/
 credentials/
 
 chainlit.md
-.chainlit/translations
+.chainlit/

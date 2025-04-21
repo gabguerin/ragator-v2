@@ -99,7 +99,7 @@ class QdrantStore(BaseVectorStore):
         ):
             chunks_batch = chunks[batch_start_index : batch_start_index + batch_size]
 
-            embeddings = await self.embedding_model.aembed_documents(
+            embeddings = await self.embedding_model.embed_batch(
                 [chunk.content for chunk in chunks_batch]
             )
 
@@ -128,7 +128,7 @@ class QdrantStore(BaseVectorStore):
         Returns:
             List[Dict[str, Any]]: List of search results with metadata.
         """
-        query_vector = self.embedding_model.embed_query(query)
+        query_vector = await self.embedding_model.embed_query(query)
 
         results = await self.client.search(
             collection_name=collection_name, query_vector=query_vector, limit=k

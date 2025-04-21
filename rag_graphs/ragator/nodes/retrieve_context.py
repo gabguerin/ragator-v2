@@ -1,13 +1,8 @@
 from typing import Any
 
-from langchain_core.embeddings import Embeddings
-
-from rag_graphs.ragator.params import (
-    RagState,
-    EmbeddingParams,
-    VectorStoreParams,
-    RagParams,
-)
+from rag_graphs.ragator.state import RagState
+from src.generation.embeddings.base import BaseEmbeddingModel
+from src.params import RagParams, EmbeddingParams, VectorStoreParams
 from src.retrieval.vector_stores.base import BaseVectorStore
 from src.utils.importlib import import_module_from_path
 
@@ -22,8 +17,8 @@ async def retrieve_context(state: RagState) -> dict:
     embedding_model_class: Any = import_module_from_path(
         module_path=embedding_params.module, object_name=embedding_params.class_name
     )
-    embedding_model: Embeddings = embedding_model_class(
-        model=embedding_params.model_name,
+    embedding_model: BaseEmbeddingModel = embedding_model_class(
+        model_name=embedding_params.model_name,
         dimensions=embedding_params.dimension,
     )
 
@@ -37,7 +32,7 @@ async def retrieve_context(state: RagState) -> dict:
     retrieved_chunks = await vector_store.similarity_search(
         collection_name=vector_store_params.collection_name,
         query=state["messages"][-1].content,
-        k=rag_params.retrieve_top_k,
+        k=vector_store_params.retrieve_top_k,
     )
 
     return {"retrieved_chunks": retrieved_chunks}

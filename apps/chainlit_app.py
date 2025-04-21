@@ -9,7 +9,7 @@ from langchain_core.runnables import RunnableConfig
 from rag_graphs.ragator.graph import graph
 
 
-RAGATOR_PARAMS_PATH = Path("rag_graphs/ragator/rag_params.yaml")
+RAGATOR_PARAMS_PATH = Path("rag_graphs/ragator/params.yaml")
 
 
 @cl.on_chat_start

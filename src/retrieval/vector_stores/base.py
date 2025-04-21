@@ -2,15 +2,14 @@
 from abc import ABC, abstractmethod
 from typing import List, Any
 
-from langchain_core.embeddings import Embeddings
-
+from src.generation.embeddings.base import BaseEmbeddingModel
 from src.retrieval.chunk import Chunk
 
 
 class BaseVectorStore(ABC):
     """Abstract base class for vector stores."""
 
-    def __init__(self, embedding_model: Embeddings):
+    def __init__(self, embedding_model: BaseEmbeddingModel):
         self.embedding_model = embedding_model
         self.client = self.initialize_client()
 
