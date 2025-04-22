@@ -22,7 +22,7 @@ def update_readme_with_diagram(mermaid_diagram: str, rag_name: str):
 
     if start_tag not in readme_text or end_tag not in readme_text:
         # If the tags are not found, add them to the README
-        readme_text += f"\n{start_tag}\n```mermaid\n{mermaid_diagram}\n```\n{end_tag}"
+        readme_text += f"### {rag_name} graph\n\n{start_tag}\n```mermaid\n{mermaid_diagram}\n```\n{end_tag}"
         readme_path.write_text(readme_text)
         return
 
