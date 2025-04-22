@@ -1,5 +1,6 @@
 vars:
   - script_folder_path: scripts/populate_ragator_db
+  - ragator_graph_path: src/graphs/ragator
   - data_folder_path: data/ragator
 
 stages:
@@ -64,7 +65,7 @@ stages:
       - ${script_folder_path}/stages/store_chunks_in_db.py
       - ${data_folder_path}/chunks.parquet.gzip
     params:
-      - ${script_folder_path}/params.yaml:
+      - ${ragator_graph_path}/params.yaml:
         - embedding.module
         - embedding.class_name
         - embedding.model_name

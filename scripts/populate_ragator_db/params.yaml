@@ -6,14 +6,3 @@ max_pages_per_sources:  100
 splitter:
   chunk_size: 1000
   chunk_overlap: 200
-
-embedding:
-    module: src.generation.embeddings.openai
-    class_name: OpenAIEmbeddingModel
-    model_name: "text-embedding-3-small"
-    dimension: 1536
-
-vector_store:
-    module: src.retrieval.vector_stores.qdrant
-    class_name: QdrantStore
-    collection_name: "ragator-collection"
