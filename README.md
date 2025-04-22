@@ -29,7 +29,7 @@ Ragator is a tool for generating and managing RAG (Retrieval-Augmented Generatio
 │   │   ├── file_handlers/  # File handlers for different file types
 │   │   └── vector_stores/  # Wrappers for vector databases
 │   ├── graphs/
-│   │   ├── your_graph/
+│   │   ├── <name-of-your-rag>/
 │   │   │   ├── nodes/      # State modifier functions
 │   │   │   ├── state.py    # State definition
 │   │   │   ├── graph.py    # Graph definition in LangGraph
@@ -39,7 +39,38 @@ Ragator is a tool for generating and managing RAG (Retrieval-Augmented Generatio
 │   └── params.py           # Parameters for the LangGraph state
 ```
 
-## Graphs
+## Graph Configuration & Parametrization
+
+```yaml
+embedding:
+  module: <path.to.embedding.module>
+  class_name: <EmbeddingModelClass>
+  model_name: <embedding-model-name>
+  dimension: <embedding-dimension>
+
+vector_store:
+  module: <path.to.vector.store.module>
+  class_name: <VectorStoreClass>
+  collection_name: <name-of-your-collection>
+  retrieve_top_k: <number-of-top-results>
+
+llm_instructions:
+  <instruction_block_name>:
+    model:
+      module: <path.to.chat.model.module>
+      class_name: <ChatModelClass>
+      model_name: <llm-model-name>
+    
+    system_prompt: |
+      <System prompt tailored to the task>
+
+    human_prompt: |
+      <Human prompt template using {question}, {context}, or {message_history}>
+
+```
+
+## RAG examples
+
 ### ragator graph
 
 <!-- RAGATOR_DIAGRAM_START -->
