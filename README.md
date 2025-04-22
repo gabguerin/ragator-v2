@@ -13,7 +13,7 @@ Ragator is a tool for generating and managing RAG (Retrieval-Augmented Generatio
 - Install the project dependencies in the new venv:
 
     ```bash
-    uv install
+    uv sync	--all-extras --dev
     ```
 
 ## Code structure
