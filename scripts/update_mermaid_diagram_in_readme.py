@@ -42,7 +42,7 @@ def main(
     Main function to load a workflow schema and draw it as a Mermaid diagram.
     """
     rag_workflow = import_module_from_path(
-        module_path=f"rag_graphs.{rag_name}.graph",
+        module_path=f"src.graphs.{rag_name}.graph",
         object_name="graph",
     )
 

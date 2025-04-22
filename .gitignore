@@ -28,3 +28,5 @@ credentials/
 
 chainlit.md
 .chainlit/
+
+.langgraph_api/

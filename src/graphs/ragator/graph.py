@@ -2,13 +2,13 @@ from langgraph.checkpoint.memory import MemorySaver
 from langgraph.constants import START, END
 from langgraph.graph import StateGraph
 
-from rag_graphs.ragator.nodes.classify_question import classify_question
-from rag_graphs.ragator.nodes.generate_llm_response import generate_llm_response
-from rag_graphs.ragator.nodes.generate_llm_response_from_context import (
+from src.graphs.ragator.nodes.classify_question import classify_question
+from src.graphs.ragator.nodes.generate_llm_response import generate_llm_response
+from src.graphs.ragator.nodes.generate_llm_response_from_context import (
     generate_llm_response_from_context,
 )
-from rag_graphs.ragator.nodes.retrieve_context import retrieve_context
-from rag_graphs.ragator.state import RagState
+from src.graphs.ragator.nodes.retrieve_context import retrieve_context
+from src.graphs.ragator.state import RagState
 
 
 graph_builder = StateGraph(RagState)
@@ -27,6 +27,7 @@ graph_builder.add_edge(START, "classify_question")
 # Add conditional routing from classify_question
 graph_builder.add_conditional_edges(
     "classify_question",
+    # Routing based on classification
     lambda state: state["question_classification"],
     {
         "RAGATOR": "retrieve_context",

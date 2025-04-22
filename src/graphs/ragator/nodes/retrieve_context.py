@@ -1,6 +1,6 @@
 from typing import Any
 
-from rag_graphs.ragator.state import RagState
+from src.graphs.ragator.state import RagState
 from src.generation.embeddings.base import BaseEmbeddingModel
 from src.params import RagParams, EmbeddingParams, VectorStoreParams
 from src.retrieval.vector_stores.base import BaseVectorStore

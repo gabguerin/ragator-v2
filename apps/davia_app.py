@@ -1,6 +1,6 @@
 from davia import Davia, run_server
 
-from rag_graphs.ragator.graph import graph_builder
+from src.graphs.ragator.graph import graph_builder
 
 davia_app = Davia()
 

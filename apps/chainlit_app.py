@@ -6,10 +6,10 @@ import yaml
 from langchain_core.messages import HumanMessage
 from langchain_core.runnables import RunnableConfig
 
-from rag_graphs.ragator.graph import graph
+from src.graphs.ragator.graph import graph
 
 
-RAGATOR_PARAMS_PATH = Path("rag_graphs/ragator/params.yaml")
+RAGATOR_PARAMS_PATH = Path("src/graphs/ragator/params.yaml")
 
 
 @cl.on_chat_start

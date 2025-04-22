@@ -96,8 +96,8 @@ stages:
       size: 2845932
   store_chunks_in_db:
     cmd: PYTHONPATH=. python scripts/populate_ragator_db/stages/store_chunks_in_db.py
-      --chunks-parquet-path data/ragator/chunks.parquet.gzip --embedding-module langchain_openai
-      --embedding-class-name OpenAIEmbeddings --embedding-model-name text-embedding-3-small
+      --chunks-parquet-path data/ragator/chunks.parquet.gzip --embedding-module src.generation.embeddings.openai
+      --embedding-class-name OpenAIEmbeddingModel --embedding-model-name text-embedding-3-small
       --embedding-dimension 1536 --vector-store-module src.retrieval.vector_stores.qdrant
       --vector-store-class-name QdrantStore --vector-store-collection-name ragator-collection
     deps:
@@ -107,14 +107,14 @@ stages:
       size: 2845932
     - path: scripts/populate_ragator_db/stages/store_chunks_in_db.py
       hash: md5
-      md5: 340ce61f9096eb8f47275c9da5da0748
-      size: 2738
+      md5: e8e0c9a4e2091234c26f78c4e8ef27be
+      size: 2743
     params:
       scripts/populate_ragator_db/params.yaml:
-        embedding.class_name: OpenAIEmbeddings
+        embedding.class_name: OpenAIEmbeddingModel
         embedding.dimension: 1536
         embedding.model_name: text-embedding-3-small
-        embedding.module: langchain_openai
+        embedding.module: src.generation.embeddings.openai
         vector_store.class_name: QdrantStore
         vector_store.collection_name: ragator-collection
         vector_store.module: src.retrieval.vector_stores.qdrant

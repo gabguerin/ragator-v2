@@ -1,4 +1,4 @@
-from rag_graphs.ragator.state import RagState
+from src.graphs.ragator.state import RagState
 from src.generation.chat_models.base import BaseChatModel
 from langchain_core.messages import SystemMessage, HumanMessage
 from src.params import RagParams
