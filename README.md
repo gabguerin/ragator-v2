@@ -39,7 +39,62 @@ Ragator is a tool for generating and managing RAG (Retrieval-Augmented Generatio
 │   └── params.py           # Parameters for the LangGraph state
 ```
 
-## Graph Configuration & Parametrization
+## RAG Configuration & Parametrization
+
+### State definition
+The state is defined in `src/graphs/<name-of-your-rag>/state.py`. 
+
+Use RagParams as input to store all the information about the `VectorStore`, `Embeddings`, `ChatModels` that will be used in the RAG. 
+
+RagParams is defined in [src/params.py](src/params.py).
+
+```python
+class RagState(TypedDict):
+    """RAG state for the RAGator."""
+
+    messages: Annotated[Sequence[BaseMessage], add_messages]
+    rag_params: dict    # This will take the structure of RagParams from the params.py file
+```
+[See state example](src/graphs/ragator/state.py)
+
+### Node implementation
+
+Implement different nodes in the `src/graphs/<name-of-your-rag>/nodes/` directory. 
+
+Each node should be a Python function that takes the *state as input* and returns a dict with the modified parameters of the state.
+
+```python
+def <node_name>(state: State) -> dict:
+    # Use the state to access the messages and rag_params
+    # rag_params = RagParams(**state["rag_params"])
+    # ...
+    return {"parameter_of_state": modified_parameter_of_state}
+```
+[See node example](src/graphs/ragator/nodes/classify_question.py)
+
+### Graph definition
+The graph is defined in `src/graphs/<name-of-your-rag>/graph.py`.
+
+```python
+# Define the state used in the graph
+graph_builder = StateGraph(RagState)
+
+# Add nodes
+graph_builder.add_node("your_node", <node_name>)
+
+# Add edges
+graph_builder.add_edge(START, "your_node")
+graph_builder.add_edge("your_node", END)
+
+# Compile the graph
+graph = graph_builder.compile()
+```
+[See graph example](src/graphs/ragator/graph.py)
+
+### RAG parametrization
+
+This parameters will be loaded if needed in your nodes. 
+The yaml file is located in `src/graphs/<name-of-your-rag>/params.yaml` and has the same structure as RagParams. 
 
 ```yaml
 embedding:
@@ -68,6 +123,7 @@ llm_instructions:
       <Human prompt template using {question}, {context}, or {message_history}>
 
 ```
+[See params example](src/graphs/ragator/params.yaml)
 
 ## RAG examples
 
