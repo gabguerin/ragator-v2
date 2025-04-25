@@ -45,20 +45,29 @@ Ragator is a tool for generating and managing RAG (Retrieval-Augmented Generatio
 The state is defined in `src/graphs/<name-of-your-rag>/state.py`. 
 
 ```python
-class RagState(TypedDict):
-    """RAG state for the RAGator."""
+class StateSchema(TypedDict):
+    """State schema of the RAGator."""
 
     messages: Annotated[Sequence[BaseMessage], add_messages]
     chat_models_params: dict    # This will take the structure of RagParams from the params.py file
 ```
 [See state example](src/graphs/ragator/state.py)
 
-## Config definition
+### Config definition
 The config is defined in `src/graphs/<name-of-your-rag>/config.py`. 
 
-```python
-from typing import TypedDict
+Use the configurations of the EmbeddingConfig, VectorStoreConfig and ChatModelConfig classes define in [src/graph_config.py](src/graph_config.py) to configure your RAG. 
 
+```python
+
+class ConfigSchema(TypedDict):
+    """Configuration schema for the RAGator."""
+    
+    embedding: dict[str, str]                   # Embedding model config
+    vector_store: dict[str, str]                # Vector store config
+    <node_using_a_chat_model>: dict[str, str]   # Chat model config
+```
+[See config example](src/graphs/ragator/config.py)
 
 ### Node implementation
 
@@ -80,7 +89,7 @@ The graph is defined in `src/graphs/<name-of-your-rag>/graph.py`.
 
 ```python
 # Define the state used in the graph
-graph_builder = StateGraph(RagState)
+graph_builder = StateGraph(StateSchema, ConfigSchema)
 
 # Add nodes
 graph_builder.add_node("your_node", <node_name>)
@@ -112,7 +121,7 @@ vector_store:
   collection_name: <name-of-your-collection>
   retrieve_top_k: <number-of-top-results>
 
-<node_name_using_chat_model>:
+<node_using_chat_model>:
   module: <path.to.chat.model.module>
   class_name: <ChatModelClass>
   model_name: <llm-model-name>

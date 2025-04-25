@@ -6,8 +6,6 @@ from src.graph_config import EmbeddingConfig, VectorStoreConfig, ChatModelConfig
 
 
 class ConfigSchema(TypedDict):
-    thread_id: str
-
     embedding: dict[str, str]
     vector_store: dict[str, str]
 
