@@ -79,14 +79,11 @@ Each node should be a Python function that takes the *state as input* and return
 ```python
 def <node_name>(state: StateSchema, config: ConfigSchema) -> dict:
     # Use the state and config to access the messages and rag parameters
-    # 
-    # message_history = state["messages"]
-    # 
-    # embedding_config = EmbeddingConfig(**config["configurable"]["embedding"])
-    # vector_store_config = VectorStoreConfig(**config["configurable"]["vector_store"])
-    # chat_model_config = ChatModelConfig(**config["configurable"]["<node_using_a_chat_model>"])
-    # 
-    # ...
+    message_history = state["messages"]
+    chat_model_config = ChatModelConfig(**config["configurable"]["<node_using_a_chat_model>"])
+    
+    ...
+    
     return {"parameter_of_state": modified_parameter_of_state}
 ```
 [See node example](src/graphs/ragator/nodes/classify_question.py)
