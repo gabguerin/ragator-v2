@@ -45,11 +45,12 @@ Ragator is a tool for generating and managing RAG (Retrieval-Augmented Generatio
 The state is defined in `src/graphs/<name-of-your-rag>/state.py`. 
 
 ```python
+
 class StateSchema(TypedDict):
     """State schema of the RAGator."""
 
     messages: Annotated[Sequence[BaseMessage], add_messages]
-    chat_models_params: dict    # This will take the structure of RagParams from the params.py file
+    # Add other parameters to the state as needed
 ```
 [See state example](src/graphs/ragator/state.py)
 
