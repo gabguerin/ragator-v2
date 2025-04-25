@@ -77,9 +77,13 @@ Implement different nodes in the `src/graphs/<name-of-your-rag>/nodes/` director
 Each node should be a Python function that takes the *state as input* and returns a dict with the modified parameters of the state.
 
 ```python
-def <node_name>(state: State) -> dict:
-    # Use the state to access the messages and rag_params
-    # rag_params = RagParams(**state["rag_params"])
+def <node_name>(state: StateSchema, config: ConfigSchema) -> dict:
+    # Use the state and config to access the messages and rag parameters
+    # 
+    # embedding_config = EmbeddingConfig(**config["configurable"]["embedding"])
+    # vector_store_config = VectorStoreConfig(**config["configurable"]["vector_store"])
+    # chat_model_config = ChatModelConfig(**config["configurable"]["<node_using_a_chat_model>"])
+    # 
     # ...
     return {"parameter_of_state": modified_parameter_of_state}
 ```
