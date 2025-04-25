@@ -2,16 +2,17 @@ from langgraph.checkpoint.memory import MemorySaver
 from langgraph.constants import START, END
 from langgraph.graph import StateGraph
 
+from src.graphs.ragator.config import ConfigSchema
 from src.graphs.ragator.nodes.classify_question import classify_question
 from src.graphs.ragator.nodes.generate_llm_response import generate_llm_response
 from src.graphs.ragator.nodes.generate_llm_response_from_context import (
     generate_llm_response_from_context,
 )
 from src.graphs.ragator.nodes.retrieve_context import retrieve_context
-from src.graphs.ragator.state import RagState
+from src.graphs.ragator.state import StateSchema
 
 
-graph_builder = StateGraph(RagState)
+graph_builder = StateGraph(StateSchema, ConfigSchema)
 
 # Add nodes
 graph_builder.add_node("classify_question", classify_question)

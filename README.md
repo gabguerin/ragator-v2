@@ -33,10 +33,10 @@ Ragator is a tool for generating and managing RAG (Retrieval-Augmented Generatio
 │   │   │   ├── nodes/      # State modifier functions
 │   │   │   ├── state.py    # State definition
 │   │   │   ├── graph.py    # Graph definition in LangGraph
-│   │   │   └── params.py   # Parameters for the graph
+│   │   │   └── config.py   # Configuration for the graph
 │   │   └── ...
 │   ├── utils/              # Utility functions
-│   └── params.py           # Parameters for the LangGraph state
+│   └── graph_config.py     # TypedDicts to define the configuration of the graphs
 ```
 
 ## RAG Configuration & Parametrization
@@ -44,18 +44,21 @@ Ragator is a tool for generating and managing RAG (Retrieval-Augmented Generatio
 ### State definition
 The state is defined in `src/graphs/<name-of-your-rag>/state.py`. 
 
-Use RagParams as input to store all the information about the `VectorStore`, `Embeddings`, `ChatModels` that will be used in the RAG. 
-
-RagParams is defined in [src/params.py](src/params.py).
-
 ```python
 class RagState(TypedDict):
     """RAG state for the RAGator."""
 
     messages: Annotated[Sequence[BaseMessage], add_messages]
-    rag_params: dict    # This will take the structure of RagParams from the params.py file
+    chat_models_params: dict    # This will take the structure of RagParams from the params.py file
 ```
 [See state example](src/graphs/ragator/state.py)
+
+## Config definition
+The config is defined in `src/graphs/<name-of-your-rag>/config.py`. 
+
+```python
+from typing import TypedDict
+
 
 ### Node implementation
 
@@ -109,21 +112,19 @@ vector_store:
   collection_name: <name-of-your-collection>
   retrieve_top_k: <number-of-top-results>
 
-llm_instructions:
-  <instruction_block_name>:
-    model:
-      module: <path.to.chat.model.module>
-      class_name: <ChatModelClass>
-      model_name: <llm-model-name>
-    
-    system_prompt: |
-      <System prompt tailored to the task>
+<node_name_using_chat_model>:
+  module: <path.to.chat.model.module>
+  class_name: <ChatModelClass>
+  model_name: <llm-model-name>
+  
+  system_prompt: |
+    <System prompt tailored to the task>
 
-    human_prompt: |
-      <Human prompt template using {question}, {context}, or {message_history}>
+  human_prompt: |
+    <Human prompt template using {question}, {context}, or {message_history}>
 
 ```
-[See params example](src/graphs/ragator/params.yaml)
+[See params example](data/configs/ragator.yaml)
 
 ## RAG examples
 

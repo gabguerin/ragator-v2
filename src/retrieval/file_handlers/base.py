@@ -5,22 +5,22 @@ from abc import ABC, abstractmethod
 from uuid import uuid5, NAMESPACE_DNS
 
 import aiofiles
-from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from src.retrieval.chunk import Chunk
 
 
 class BaseFileHandler(ABC):
-    def __init__(
-        self, filepath: str | Path, chunk_size: int = 500, chunk_overlap: int = 50
-    ):
+    def __init__(self, filepath: str | Path):
         self.filepath = filepath
-        self.chunk_size = chunk_size
-        self.chunk_overlap = chunk_overlap
 
     @abstractmethod
     async def preprocess(self, file_content: str) -> str:
         """Async method to load file content."""
+        ...
+
+    @abstractmethod
+    async def split_text(self, content: str) -> List[str]:
+        """Async method to split text into chunks."""
         ...
 
     async def load(self) -> str:
@@ -31,13 +31,10 @@ class BaseFileHandler(ABC):
         return file_content
 
     async def to_chunks(self) -> List[Chunk]:
+        """Async method to convert file content to a list of Chunk objects."""
         content = await self.load()
 
         preprocessed_content = await self.preprocess(content)
-
-        splitter = RecursiveCharacterTextSplitter(
-            chunk_size=self.chunk_size, chunk_overlap=self.chunk_overlap
-        )
 
         chunks = [
             Chunk(
@@ -50,7 +47,7 @@ class BaseFileHandler(ABC):
                     )
                 ),
             )
-            for chunk_content in splitter.split_text(preprocessed_content)
+            for chunk_content in await self.split_text(preprocessed_content)
         ]
 
         return chunks

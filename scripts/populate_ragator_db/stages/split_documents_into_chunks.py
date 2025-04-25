@@ -10,13 +10,13 @@ from src.retrieval.file_handlers.html import HtmlFileHandler
 
 
 async def _main(
-    downloaded_html_pages_folder: Path,
+    input_files_folder: Path,
     chunk_size: int,
     chunk_overlap: int,
     chunks_parquet_path: str,
 ) -> None:
     chunks_data = []
-    for html_page_path in downloaded_html_pages_folder.glob("*"):
+    for html_page_path in input_files_folder.glob("*"):
         file = HtmlFileHandler(
             html_page_path,
             chunk_size=chunk_size,
@@ -39,7 +39,7 @@ def main(
 ) -> None:
     asyncio.run(
         _main(
-            downloaded_html_pages_folder=downloaded_html_pages_folder,
+            input_files_folder=downloaded_html_pages_folder,
             chunk_size=chunk_size,
             chunk_overlap=chunk_overlap,
             chunks_parquet_path=chunks_parquet_path,
