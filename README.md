@@ -79,6 +79,7 @@ Each node should be a Python function that takes the *state as input* and return
 ```python
 def <node_name>(state: StateSchema, config: ConfigSchema) -> dict:
     # Use the state and config to access the messages and rag parameters
+    # 
     # message_history = state["messages"]
     # 
     # embedding_config = EmbeddingConfig(**config["configurable"]["embedding"])
