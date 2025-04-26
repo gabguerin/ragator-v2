@@ -39,7 +39,7 @@ class BaseFileHandler(ABC):
         chunks = [
             Chunk(
                 content=chunk_content,
-                source=self.filepath.name,
+                source=str(self.filepath.name),
                 uuid=str(
                     uuid5(
                         NAMESPACE_DNS,

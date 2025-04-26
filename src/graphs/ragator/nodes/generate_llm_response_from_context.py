@@ -14,13 +14,16 @@ async def generate_llm_response_from_context(
     """Generate an answer using a language model based on the question classification."""
 
     # Load configuration
-    config = ConfigSchema(**config["configurable"])
+    config_params = ConfigSchema(**config["configurable"])
 
     # Load RAG chat model
     llm: BaseChatModel = import_module_from_path(
-        module_path=config.rag_chat_model.module,
-        object_name=config.rag_chat_model.class_name,
-    )(model_name=config.rag_chat_model.model_name)
+        module_path=config_params.rag_chat_model.module,
+        object_name=config_params.rag_chat_model.class_name,
+    )(model_name=config_params.rag_chat_model.model_name)
+
+    if state.retrieved_chunks is None:
+        raise ValueError("No retrieved chunks found in the state.")
 
     # Retrieve the context based on the retrieved chunks
     context = "\n".join(
@@ -33,9 +36,9 @@ async def generate_llm_response_from_context(
     response = await llm.invoke(
         [
             *state.messages[:-1],
-            SystemMessage(content=config.rag_chat_model.system_prompt),
+            SystemMessage(content=config_params.rag_chat_model.system_prompt),
             HumanMessage(
-                content=config.rag_chat_model.human_prompt.format(
+                content=config_params.rag_chat_model.human_prompt.format(
                     context=context,
                     question=state.messages[-1].content,
                 )

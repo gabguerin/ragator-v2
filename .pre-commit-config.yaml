@@ -1,0 +1,46 @@
+default_install_hook_types:
+  # Mandatory to install both pre-commit and pre-push hooks (see https://pre-commit.com/#top_level-default_install_hook_types)
+  # Add new hook types here to ensure automatic installation when running `pre-commit install`
+  - pre-commit
+  - pre-push
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.3.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: (^.*\.csv$)|(^.*dvc\.lock$)
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+
+  - repo: local
+    hooks:
+      - id: format-fix
+        name: Formatting (ruff)
+        entry: uv run ruff format
+        language: system
+        types: [python]
+        stages: [pre-commit]
+      - id: lint-check
+        name: Linting (ruff)
+        entry: uv run ruff check
+        language: system
+        types: [python]
+        stages: [pre-commit]
+      - id: test
+        name: Unit testing (pytest)
+        entry: make test
+        pass_filenames: false
+        language: system
+        types: [python]
+        stages: [pre-push]
+      - id: dvc-pre-push
+        name: DVC pre-push
+        entry: uv run dvc
+        args:
+          - git-hook
+          - pre-push
+        require_serial: true
+        verbose: true
+        language: system
+        stages: [pre-push]

@@ -10,21 +10,23 @@ from src.utils.importlib import import_module_from_path
 
 async def classify_question(state: StateSchema, config: RunnableConfig) -> dict:
     """Classify the question using a language model."""
-    
+
     # Load configuration
-    config = ConfigSchema(**config["configurable"])
+    config_params = ConfigSchema(**config["configurable"])
 
     # Load classification chat model
     llm: BaseChatModel = import_module_from_path(
-        module_path=config.classification_chat_model.module,
-        object_name=config.classification_chat_model.class_name,
-    )(model_name=config.classification_chat_model.model_name)
+        module_path=config_params.classification_chat_model.module,
+        object_name=config_params.classification_chat_model.class_name,
+    )(model_name=config_params.classification_chat_model.model_name)
 
     question_classification = await llm.invoke(
         [
-            SystemMessage(content=config.classification_chat_model.system_prompt),
+            SystemMessage(
+                content=config_params.classification_chat_model.system_prompt
+            ),
             HumanMessage(
-                content=config.classification_chat_model.human_prompt.format(
+                content=config_params.classification_chat_model.human_prompt.format(
                     message_history="\n".join(
                         [f"{msg.type}: {msg.content}" for msg in state.messages[:-1]]
                     )

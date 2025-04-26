@@ -1,4 +1,5 @@
 """Chainlit app for the RAGator graph."""
+
 import chainlit as cl
 
 from langchain_core.messages import HumanMessage

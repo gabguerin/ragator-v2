@@ -12,13 +12,13 @@ async def generate_llm_response(state: StateSchema, config: RunnableConfig) -> d
     """Generate a static answer using a language model to explain that the question is out of scope."""
 
     # Load configuration
-    config = ConfigSchema(**config["configurable"])
+    config_params = ConfigSchema(**config["configurable"])
 
     # Load the appropriate chat model based on the question classification
-    if state.get("question_classification") == "OUT_OF_SCOPE":
-        chat_model_config = config.question_out_of_scope_chat_model
-    elif state.get("question_classification") == "RAG":
-        chat_model_config = config.question_about_rag_chat_model
+    if state.question_classification == "OUT_OF_SCOPE":
+        chat_model_config = config_params.question_out_of_scope_chat_model
+    elif state.question_classification == "RAG":
+        chat_model_config = config_params.question_about_rag_chat_model
     else:
         raise ValueError("Invalid question classification")
 

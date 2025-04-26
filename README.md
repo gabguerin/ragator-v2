@@ -6,7 +6,7 @@ Ragator is a tool for generating and managing RAG (Retrieval-Augmented Generatio
 
 ## Setup
 
-- [Install uv](https://docs.astral.sh/uv/getting-started/installation/) to manage your Python versions, virtual environments, dependencies and tooling configs. 
+- [Install uv](https://docs.astral.sh/uv/getting-started/installation/) to manage your Python versions, virtual environments, dependencies and tooling configs.
 
 - [Create a virtual environment with uv](https://docs.astral.sh/uv/pip/environments/#creating-a-virtual-environment) for the project.
 
@@ -42,7 +42,7 @@ Ragator is a tool for generating and managing RAG (Retrieval-Augmented Generatio
 ## RAG Configuration & Parametrization
 
 ### State definition
-The state is defined in `src/graphs/<name-of-your-rag>/state.py`. 
+The state is defined in `src/graphs/<name-of-your-rag>/state.py`.
 
 ```python
 
@@ -55,15 +55,15 @@ class StateSchema(TypedDict):
 [See state example](src/graphs/ragator/state.py)
 
 ### Config definition
-The config is defined in `src/graphs/<name-of-your-rag>/config.py`. 
+The config is defined in `src/graphs/<name-of-your-rag>/config.py`.
 
-Use the configurations of the EmbeddingConfig, VectorStoreConfig and ChatModelConfig classes define in [src/graph_config.py](src/graph_config.py) to configure your RAG. 
+Use the configurations of the EmbeddingConfig, VectorStoreConfig and ChatModelConfig classes define in [src/graph_config.py](src/graph_config.py) to configure your RAG.
 
 ```python
 
 class ConfigSchema(TypedDict):
     """Configuration schema for the RAGator."""
-    
+
     embedding: EmbeddingConfig
     vector_store: VectorStoreConfig
     <node_using_a_chat_model>: ChatModelConfig
@@ -72,7 +72,7 @@ class ConfigSchema(TypedDict):
 
 ### Node implementation
 
-Implement different nodes in the `src/graphs/<name-of-your-rag>/nodes/` directory. 
+Implement different nodes in the `src/graphs/<name-of-your-rag>/nodes/` directory.
 
 Each node should be a Python function that takes the *state as input* and returns a dict with the modified parameters of the state.
 
@@ -80,11 +80,11 @@ Each node should be a Python function that takes the *state as input* and return
 def <node_name>(state: StateSchema, config: RunnableConfig) -> dict:
     # Use the state and config to access the messages and rag parameters
     message_history = state.messages
-    config = ConfigSchema(**config["configurable"])
-    
+    config: ConfigSchema = ConfigSchema(**config["configurable"])
+
     # Perform the necessary operations on the state
     ...
-    
+
     return {"parameter_of_state": modified_parameter_of_state}
 ```
 [See node example](src/graphs/ragator/nodes/classify_question.py)
@@ -110,8 +110,8 @@ graph = graph_builder.compile()
 
 ### RAG parametrization
 
-This parameters will be loaded if needed in your nodes. 
-The yaml file is located in `src/graphs/<name-of-your-rag>/params.yaml` and has the same structure as RagParams. 
+This parameters will be loaded if needed in your nodes.
+The yaml file is located in `src/graphs/<name-of-your-rag>/params.yaml` and has the same structure as RagParams.
 
 ```yaml
 embedding:
@@ -130,7 +130,7 @@ vector_store:
   module: <path.to.chat.model.module>
   class_name: <ChatModelClass>
   model_name: <llm-model-name>
-  
+
   system_prompt: |
     <System prompt tailored to the task>
 
