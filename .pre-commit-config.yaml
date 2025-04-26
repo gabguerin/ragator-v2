@@ -27,13 +27,6 @@ repos:
         language: system
         types: [python]
         stages: [pre-commit]
-      - id: test
-        name: Unit testing (pytest)
-        entry: make test
-        pass_filenames: false
-        language: system
-        types: [python]
-        stages: [pre-push]
       - id: dvc-pre-push
         name: DVC pre-push
         entry: uv run dvc
