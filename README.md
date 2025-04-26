@@ -36,7 +36,7 @@ Ragator is a tool for generating and managing RAG (Retrieval-Augmented Generatio
 │   │   │   └── config.py   # Configuration for the graph
 │   │   └── ...
 │   ├── utils/              # Utility functions
-│   └── graph_config.py     # TypedDicts to define the configuration of the graphs
+│   └── graph_config.py     # Pydantic models to define the configuration of the graphs
 ```
 
 ## RAG Configuration & Parametrization
@@ -64,9 +64,9 @@ Use the configurations of the EmbeddingConfig, VectorStoreConfig and ChatModelCo
 class ConfigSchema(TypedDict):
     """Configuration schema for the RAGator."""
     
-    embedding: dict[str, str]                   # Embedding model config
-    vector_store: dict[str, str]                # Vector store config
-    <node_using_a_chat_model>: dict[str, str]   # Chat model config
+    embedding: EmbeddingConfig
+    vector_store: VectorStoreConfig
+    <node_using_a_chat_model>: ChatModelConfig
 ```
 [See config example](src/graphs/ragator/config.py)
 
@@ -77,11 +77,12 @@ Implement different nodes in the `src/graphs/<name-of-your-rag>/nodes/` director
 Each node should be a Python function that takes the *state as input* and returns a dict with the modified parameters of the state.
 
 ```python
-def <node_name>(state: StateSchema, config: ConfigSchema) -> dict:
+def <node_name>(state: StateSchema, config: RunnableConfig) -> dict:
     # Use the state and config to access the messages and rag parameters
-    message_history = state["messages"]
-    chat_model_config = ChatModelConfig(**config["configurable"]["<node_using_a_chat_model>"])
+    message_history = state.messages
+    config = ConfigSchema(**config["configurable"])
     
+    # Perform the necessary operations on the state
     ...
     
     return {"parameter_of_state": modified_parameter_of_state}

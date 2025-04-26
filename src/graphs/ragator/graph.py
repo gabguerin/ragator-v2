@@ -29,7 +29,7 @@ graph_builder.add_edge(START, "classify_question")
 graph_builder.add_conditional_edges(
     "classify_question",
     # Routing based on classification
-    lambda state: state["question_classification"],
+    lambda state: state.question_classification,
     {
         "RAGATOR": "retrieve_context",
         "RAG": "generate_llm_response",
