@@ -83,8 +83,8 @@ stages:
       nfiles: 182
     - path: scripts/populate_ragator_db/stages/split_documents_into_chunks.py
       hash: md5
-      md5: 620f2d07691ab08da04a228f8dddaa68
-      size: 1402
+      md5: 894be9857618915de309afb78688e9c0
+      size: 1372
     params:
       scripts/populate_ragator_db/params.yaml:
         splitter.chunk_overlap: 200
