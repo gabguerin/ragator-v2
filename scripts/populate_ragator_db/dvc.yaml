@@ -1,6 +1,6 @@
 vars:
   - script_folder_path: scripts/populate_ragator_db
-  - data_folder_path: data/ragator
+  - data_folder_path: data/ragator/data_ingestion
 
 stages:
   get_all_urls_to_download:

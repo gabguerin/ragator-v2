@@ -1,14 +1,28 @@
 """Chainlit app for the RAGator graph."""
 
 import chainlit as cl
+import yaml
+from chainlit.user_session import UserSession
 
 from langchain_core.messages import HumanMessage
 from langchain_core.runnables import RunnableConfig
 
 from langfuse.callback import CallbackHandler
 
-from src.graphs.ragator.config import config as ragator_config
+from src.graphs.ragator.config import ConfigSchema
 from src.graphs.ragator.graph import graph as ragator_graph
+
+
+@cl.on_chat_start
+async def on_chat_start():
+    """Initialize the app."""
+
+    # Load config
+    with open("data/ragator/config.yaml") as f:
+        config = ConfigSchema(**yaml.safe_load(f)).dict()
+
+    user_session = UserSession()
+    user_session.set("graph_config", config)
 
 
 @cl.on_message
@@ -32,7 +46,7 @@ async def on_message(msg: cl.Message):
             **{
                 "configurable": {
                     "thread_id": cl.context.session.id,
-                    **ragator_config,
+                    **cl.user_session.get("graph_config"),
                 },
                 "callbacks": [langchain_handler, langfuse_handler],
             },

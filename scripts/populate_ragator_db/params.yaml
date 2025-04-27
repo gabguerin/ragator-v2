@@ -1,10 +1,9 @@
 starting_urls:
   - https://langchain-ai.github.io/langgraph/
-  - https://python-client.qdrant.tech/
 max_pages_per_sources:  100
 
 splitter:
-  chunk_size: 1000
+  chunk_size: 2000
   chunk_overlap: 200
 
 embedding:

@@ -32,3 +32,5 @@ chainlit.md
 .langgraph_api/
 
 .mypy_cache/
+
+.dvc/

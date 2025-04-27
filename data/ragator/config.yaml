@@ -20,8 +20,10 @@ classification_chat_model:
     Return unique word, from one on of these three: RAG, RAGATOR, OUT_OF_SCOPE.
 
     - "RAG" — for questions about Retrieval-Augmented Generation (RAG) in general.
-    - "RAGATOR" — for questions about the Qdrant vector database or Langgraph or Ragator which is
-    the current Python project we are working on.
+    - "RAGATOR" — for questions about Langgraph a LangGraph is an open-source framework developed by LangChain
+    to facilitate the creation of advanced, controllable AI agents. It extends LangChain's capabilities by
+    enabling the construction of stateful, cyclic workflows, allowing agents to maintain context, make decisions,
+    and adapt dynamically over time or Ragator which is the current Python project we are working on.
     - "OUT_OF_SCOPE" — if the question is not about any of the above.
 
     Answer with a single word, which will be the category you have chosen."

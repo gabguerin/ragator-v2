@@ -2,7 +2,7 @@ schema: '2.0'
 stages:
   get_all_urls_to_download:
     cmd: PYTHONPATH=. python scripts/populate_ragator_db/stages/get_all_urls_to_download.py
-      --max-pages-per-sources 100 --all-urls-to-download-file-path data/ragator/html_urls_to_download.txt
+      --max-pages-per-sources 100 --all-urls-to-download-file-path data/ragator/data_ingestion/html_urls_to_download.txt
       --params-file-path scripts/populate_ragator_db/params.yaml
     deps:
     - path: scripts/populate_ragator_db/stages/get_all_urls_to_download.py
@@ -13,29 +13,29 @@ stages:
       scripts/populate_ragator_db/params.yaml:
         max_pages_per_sources: 100
     outs:
-    - path: data/ragator/html_urls_to_download.txt
+    - path: data/ragator/data_ingestion/html_urls_to_download.txt
       hash: md5
-      md5: 5fff471f6a751cd316d46c3303b554ac
-      size: 12795
+      md5: d60d865ec997ac6149e9e8e0f72fc33d
+      size: 12271
   download_html_pages:
     cmd: PYTHONPATH=. python scripts/populate_ragator_db/stages/download_html_pages.py
-      --all-urls-to-download-file-path data/ragator/html_urls_to_download.txt --downloaded-html-pages-folder
-      data/ragator/downloaded_html_pages
+      --all-urls-to-download-file-path data/ragator/data_ingestion/html_urls_to_download.txt
+      --downloaded-html-pages-folder data/ragator/data_ingestion/downloaded_html_pages
     deps:
-    - path: data/ragator/html_urls_to_download.txt
+    - path: data/ragator/data_ingestion/html_urls_to_download.txt
       hash: md5
-      md5: 5fff471f6a751cd316d46c3303b554ac
-      size: 12795
+      md5: d60d865ec997ac6149e9e8e0f72fc33d
+      size: 12271
     - path: scripts/populate_ragator_db/stages/download_html_pages.py
       hash: md5
       md5: 008eeaec937e85a7c4381f2d8fd55cc6
       size: 1030
     outs:
-    - path: data/ragator/downloaded_html_pages
+    - path: data/ragator/data_ingestion/downloaded_html_pages
       hash: md5
-      md5: bdc398492dfe863ffe4d3a22dd36a945.dir
-      size: 25665346
-      nfiles: 182
+      md5: 3332e2e12616702e05905706adeec3f7.dir
+      size: 28871498
+      nfiles: 179
   get_chunks_from_html_pages:
     cmd: PYTHONPATH=. python scripts/populate_qdrant_collection/stages/get_chunks_from_html_pages.py
       --downloaded-html-pages-folder data/rag_about_ragator/downloaded_html_pages
@@ -73,14 +73,14 @@ stages:
       nfiles: 178
   split_documents_into_chunks:
     cmd: PYTHONPATH=. python scripts/populate_ragator_db/stages/split_documents_into_chunks.py
-      --downloaded-html-pages-folder data/ragator/downloaded_html_pages --chunk-size
-      1000 --chunk-overlap 200 --chunks-parquet-path data/ragator/chunks.parquet.gzip
+      --downloaded-html-pages-folder data/ragator/data_ingestion/downloaded_html_pages
+      --chunk-size 2000 --chunk-overlap 200 --chunks-parquet-path data/ragator/data_ingestion/chunks.parquet.gzip
     deps:
-    - path: data/ragator/downloaded_html_pages
+    - path: data/ragator/data_ingestion/downloaded_html_pages
       hash: md5
-      md5: bdc398492dfe863ffe4d3a22dd36a945.dir
-      size: 25665346
-      nfiles: 182
+      md5: 3332e2e12616702e05905706adeec3f7.dir
+      size: 28871498
+      nfiles: 179
     - path: scripts/populate_ragator_db/stages/split_documents_into_chunks.py
       hash: md5
       md5: 894be9857618915de309afb78688e9c0
@@ -88,23 +88,24 @@ stages:
     params:
       scripts/populate_ragator_db/params.yaml:
         splitter.chunk_overlap: 200
-        splitter.chunk_size: 1000
+        splitter.chunk_size: 2000
     outs:
-    - path: data/ragator/chunks.parquet.gzip
+    - path: data/ragator/data_ingestion/chunks.parquet.gzip
       hash: md5
-      md5: 88cb47ceaddc01de9072ec2afb88468c
-      size: 2845932
+      md5: 96b8bb0dc6ac4695a977addc2a9b73c9
+      size: 3358223
   store_chunks_in_db:
     cmd: PYTHONPATH=. python scripts/populate_ragator_db/stages/store_chunks_in_db.py
-      --chunks-parquet-path data/ragator/chunks.parquet.gzip --embedding-module src.generation.embeddings.openai
-      --embedding-class-name OpenAIEmbeddingModel --embedding-model-name text-embedding-3-small
-      --embedding-dimension 1536 --vector-store-module src.retrieval.vector_stores.qdrant
-      --vector-store-class-name QdrantStore --vector-store-collection-name ragator-collection
+      --chunks-parquet-path data/ragator/data_ingestion/chunks.parquet.gzip --embedding-module
+      src.generation.embeddings.openai --embedding-class-name OpenAIEmbeddingModel
+      --embedding-model-name text-embedding-3-small --embedding-dimension 1536 --vector-store-module
+      src.retrieval.vector_stores.qdrant --vector-store-class-name QdrantStore --vector-store-collection-name
+      ragator-collection
     deps:
-    - path: data/ragator/chunks.parquet.gzip
+    - path: data/ragator/data_ingestion/chunks.parquet.gzip
       hash: md5
-      md5: 88cb47ceaddc01de9072ec2afb88468c
-      size: 2845932
+      md5: 96b8bb0dc6ac4695a977addc2a9b73c9
+      size: 3358223
     - path: scripts/populate_ragator_db/stages/store_chunks_in_db.py
       hash: md5
       md5: e8e0c9a4e2091234c26f78c4e8ef27be
